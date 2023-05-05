@@ -1,6 +1,6 @@
 // Profile.js
-import { useContext, useEffect, useState } from "react";
-import { doc, updateDoc, setDoc } from "firebase/firestore";
+import { useContext, useState } from "react";
+import { doc, setDoc } from "firebase/firestore";
 import { AuthContext } from "./AuthContext";
 import { updateProfile } from "firebase/auth";
 import { db } from "../firebase.config";

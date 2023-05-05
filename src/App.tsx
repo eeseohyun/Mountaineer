@@ -10,6 +10,7 @@ import Profile from "./componenets/Profile";
 import Club from "./pages/Club";
 import Participated from "./componenets/Participated";
 import Posted from "./componenets/Posted";
+import Post from "./pages/Post";
 
 import "./App.css";
 
@@ -26,6 +27,7 @@ const App = () => {
 				<Route path="/mypage/posted" element={<Posted />} />
 				<Route path="/mypage/participated" element={<Participated />} />
 				<Route path="/club" element={<Club />} />
+				<Route path="/post" element={<Post />} />
 			</Routes>
 		</>
 	);
