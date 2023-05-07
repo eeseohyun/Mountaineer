@@ -1,27 +1,33 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { TbMountain } from "react-icons/tb";
 import { Link } from "react-router-dom";
 import { AuthContext } from "./AuthContext";
 import Logout from "./Logout";
+import { getDocs, doc } from "firebase/firestore";
+import { getDownloadURL, ref } from "firebase/storage";
+import { storage, db } from "../firebase.config";
 
 const Nav = () => {
-	const { currentUser, profilePhotoURL } = useContext(AuthContext);
+	const { currentUser } = useContext(AuthContext);
 	const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
 	const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 	const [searchInput, setSearchInput] = useState("");
+	const [userProfile, setUserProfile] = useState(
+		"https://www.thechooeok.com/common/img/default_profile.png"
+	);
 
-	const toggleCategoryModal = () => {
-		setIsCategoryModalOpen(!isCategoryModalOpen);
-	};
-
-	const toggleProfileModal = () => {
-		setIsProfileModalOpen(!isProfileModalOpen);
-	};
-
-	const handleSearchInputChange = (e) => {
-		setSearchInput(e.target.value);
-	};
+	useEffect(() => {
+		const fetchProfile = async () => {
+			const storageRef = ref(storage, `${currentUser.uid}/profile`);
+			const url = await getDownloadURL(storageRef);
+			console.log();
+			setUserProfile(url);
+		};
+		if (currentUser) {
+			fetchProfile();
+		}
+	}, [currentUser]);
 
 	const handleSearchSubmit = (e) => {
 		e.preventDefault();
@@ -42,7 +48,9 @@ const Nav = () => {
 				<div className="relative">
 					<button
 						className="text-white font-semibold mr-3 ml-2 focus:outline-none"
-						onClick={toggleCategoryModal}
+						onClick={() => {
+							setIsCategoryModalOpen(!isCategoryModalOpen);
+						}}
 					>
 						동호회 모집
 					</button>
@@ -69,7 +77,7 @@ const Nav = () => {
 			</div>
 
 			{/* Search Input and User Profile */}
-			<div className="flex items-center">
+			<div className="flex items-center justify-center">
 				{/* Search Input */}
 				<form onSubmit={handleSearchSubmit}>
 					<input
@@ -77,49 +85,53 @@ const Nav = () => {
 						placeholder="검색"
 						className="px-4 py-2 mr-2 border border-gray-300 rounded-lg focus:outline-none"
 						value={searchInput}
-						onChange={handleSearchInputChange}
+						onChange={(e) => {
+							setSearchInput(e.target.value);
+						}}
 					/>
 				</form>
-				{currentUser ? (
-					<div className="relative items-center justify-center">
+				<div className="relative items-center justify-center">
+					{currentUser ? (
 						<button
 							className="text-white font-semibold focus:outline-none"
-							onClick={toggleProfileModal}
+							onMouseOver={() => {
+								setIsProfileModalOpen(!isProfileModalOpen);
+							}}
+							onMouseOut={() => setIsProfileModalOpen(!isProfileModalOpen)}
 						>
-							{profilePhotoURL && (
+							{userProfile && (
 								<img
-									src={profilePhotoURL}
+									src={userProfile}
 									alt="Profile Picture"
-									className="h-8 w-8 rounded-full mx-2"
+									className="h-10 w-10 rounded-full mx-1"
 								/>
 							)}
 						</button>
-
-						{isProfileModalOpen && (
-							<div className="absolute mt-2 py-2 w-48 bg-white rounded-lg shadow-xl">
-								<Link to="/mypage">
-									<button>마이페이지</button>
-								</Link>
-								<br></br>
-								<Logout />
-							</div>
-						)}
-					</div>
-				) : (
-					<div className="relative items-center justify-center">
-						<Link to="/login">
-							<button className="text-white font-semibold text-sm focus:outline-none">
-								로그인
-							</button>
-						</Link>
-						<span className="text-white font-semibold ml-1 mr-1">|</span>
-						<Link to="/join">
-							<button className="text-white font-semibold text-sm focus:outline-none">
-								회원가입
-							</button>
-						</Link>
-					</div>
-				)}
+					) : (
+						<>
+							<Link to="/login">
+								<button className="text-white font-semibold text-sm focus:outline-none">
+									로그인
+								</button>
+							</Link>
+							<span className="text-white font-semibold ml-1 mr-1">|</span>
+							<Link to="/join">
+								<button className="text-white font-semibold text-sm focus:outline-none">
+									회원가입
+								</button>
+							</Link>
+						</>
+					)}
+					{isProfileModalOpen && (
+						<div className="absolute mt-2 py-2 w-48 bg-white rounded-lg shadow-xl">
+							<Link to="/mypage">
+								<button>마이페이지</button>
+							</Link>
+							<br></br>
+							<Logout />
+						</div>
+					)}
+				</div>
 			</div>
 		</nav>
 	);

@@ -3,29 +3,38 @@ import { useContext, useState } from "react";
 import { doc, setDoc } from "firebase/firestore";
 import { AuthContext } from "./AuthContext";
 import { updateProfile } from "firebase/auth";
-import { db } from "../firebase.config";
+import { db, storage } from "../firebase.config";
 import { useNavigate } from "react-router-dom";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 const Profile = () => {
 	const { currentUser } = useContext(AuthContext);
 	const [nickname, setNickname] = useState("");
-	const [profilePhoto, setProfilePhoto] = useState("");
+	const [profilePhoto, setProfilePhoto] = useState(
+		"https://www.thechooeok.com/common/img/default_profile.png"
+	);
 	const navigate = useNavigate();
 
+	const profileData = {
+		nickname: nickname,
+		profileImg: profilePhoto,
+	};
 	const handleProfileUpdate = async (e) => {
 		e.preventDefault();
 		try {
-			await updateProfile(currentUser, {
-				displayName: nickname,
-				photoURL: profilePhoto,
-			});
+			if (profilePhoto) {
+				const profileImageRef = ref(storage, `${currentUser.uid}/profile`);
+				await uploadBytes(profileImageRef, profilePhoto);
+
+				const downloadUrl = await getDownloadURL(profileImageRef);
+				profileData.profileImg = downloadUrl;
+			}
+
+			await updateProfile(currentUser, { displayName: nickname });
 
 			const userRef = doc(db, "users", currentUser.uid);
-			await setDoc(userRef, {
-				displayName: nickname,
-				photoURL: profilePhoto,
-			});
-			alert("수정이 완료되었습니다!");
+			await setDoc(userRef, profileData);
+			alert("수정이 완료되었습니다.");
 			navigate("/mypage");
 		} catch (error) {
 			console.log(error);
@@ -70,8 +79,7 @@ const Profile = () => {
 							</label>
 							<input
 								type="file"
-								value={profilePhoto}
-								onChange={(e) => setProfilePhoto(e.target.value)}
+								onChange={(e) => setProfilePhoto(e.target.files[0])}
 							/>
 						</div>
 						<button
