@@ -33,14 +33,12 @@ const Nav = () => {
 		<nav className="navbar flex items-center justify-between py-4 px-6 bg-gray-800">
 			{/* Logo and Categories */}
 			<div className="flex items-center">
-				{/* Logo */}
 				<div className="h-8 w-8 mr-2">
 					<Link to="/">
 						<TbMountain className="h-8 w-8 text-white" />
 					</Link>
 				</div>
 
-				{/* Category */}
 				<div className="relative">
 					<button
 						className="text-white font-semibold mr-3 ml-2 focus:outline-none"
@@ -48,8 +46,6 @@ const Nav = () => {
 					>
 						동호회 모집
 					</button>
-
-					{/* Category Modal Window */}
 					{isCategoryModalOpen && (
 						<div className="absolute mt-2 py-2 w-48 bg-white rounded-lg shadow-xl z-1">
 							<li className="">전체</li>
@@ -62,6 +58,7 @@ const Nav = () => {
 							<li>제주</li>
 						</div>
 					)}
+
 					<button className="text-white font-semibold mr-3 focus:outline-none">
 						자유 게시판
 					</button>

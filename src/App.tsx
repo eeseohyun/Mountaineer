@@ -7,11 +7,11 @@ import Join from "./pages/Join";
 import Nav from "./componenets/Nav";
 import Mypage from "./pages/Mypage";
 import Profile from "./componenets/Profile";
-import Club from "./pages/Club";
 import Participated from "./componenets/Participated";
 import Posted from "./componenets/Posted";
 import Post from "./pages/Post";
-
+import ClubPage from "./pages/ClubPage";
+import Detail from "./pages/Detail";
 import "./App.css";
 
 const App = () => {
@@ -26,8 +26,9 @@ const App = () => {
 				<Route path="/mypage/profile" element={<Profile />} />
 				<Route path="/mypage/posted" element={<Posted />} />
 				<Route path="/mypage/participated" element={<Participated />} />
-				<Route path="/club" element={<Club />} />
+				<Route path="/club" element={<ClubPage />} />
 				<Route path="/post" element={<Post />} />
+				<Route path="/club:id" element={<Detail />} />
 			</Routes>
 		</>
 	);

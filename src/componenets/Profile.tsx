@@ -12,10 +12,6 @@ const Profile = () => {
 	const [profilePhoto, setProfilePhoto] = useState("");
 	const navigate = useNavigate();
 
-	const handelNicknameChange = (e) => {
-		setNickname(e.target.value);
-	};
-
 	const handleProfileUpdate = async (e) => {
 		e.preventDefault();
 		try {
@@ -52,7 +48,9 @@ const Profile = () => {
 								type="text"
 								placeholder="변경할 닉네임"
 								value={nickname}
-								onChange={handelNicknameChange}
+								onChange={(e) => {
+									setNickname(e.target.value);
+								}}
 							/>
 						</div>
 						<div>

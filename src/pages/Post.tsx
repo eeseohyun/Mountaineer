@@ -1,8 +1,10 @@
 import { addDoc, serverTimestamp, collection } from "firebase/firestore";
-import { db } from "../firebase.config";
-import { useEffect, useState, useContext } from "react";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { db, storage } from "../firebase.config";
+import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../componenets/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const categories = [
 	"전체",
@@ -21,7 +23,7 @@ export default function Post() {
 	const [participantsNum, setParticipantsNum] = useState(0);
 	const [schedule, setSchedule] = useState("");
 	const [context, setContext] = useState("");
-	const [imgFile, setImgFile] = useState("");
+	const [imgUpload, setImgUpload] = useState(null);
 	const navigate = useNavigate();
 
 	const postData = {
@@ -30,14 +32,26 @@ export default function Post() {
 		participantsNum: participantsNum,
 		schedule: schedule,
 		context: context,
-		imgFile: imgFile,
+		category: category,
 	};
 	const handlePost = async (e) => {
 		e.preventDefault();
 		try {
+			// 이미지를 storage에 업로드
+			const imageRef = ref(
+				storage,
+				`${currentUser.uid}/${new Date().getTime()}`
+			);
+			await uploadBytes(imageRef, imgUpload);
+
+			//업로드된 이미지의 URl을 가져와 Firestore에 저장
+			const imgUrl = await getDownloadURL(imageRef);
+
 			const userRef = await addDoc(collection(db, "club"), {
 				...postData,
+				img: imgUrl,
 			});
+
 			alert("게시물을 업로드하였습니다!");
 			navigate("/club");
 			console.log(userRef);
@@ -59,6 +73,7 @@ export default function Post() {
 							id="region"
 							name="region"
 							className="ml-2"
+							required
 						>
 							{categories.map((category) => (
 								<option key={category}>{category}</option>
@@ -74,6 +89,7 @@ export default function Post() {
 							type="text"
 							className="title w-2/3 outline-none py-1 px-2 text-sm border-2 rounded-md"
 							placeholder="산행지를 입력해주세요."
+							required
 						/>
 					</div>
 					<div className="space-x-2">
@@ -84,6 +100,7 @@ export default function Post() {
 							}}
 							type="number"
 							className="participantsNum"
+							required
 						/>
 					</div>
 					<div className="space-x-2">
@@ -94,6 +111,7 @@ export default function Post() {
 							}}
 							type="date"
 							className="schedule"
+							required
 						/>
 					</div>
 					<div>
@@ -102,6 +120,7 @@ export default function Post() {
 							onChange={(e) => {
 								setContext(e.target.value);
 							}}
+							required
 							rows="20"
 							className="context w-full text-gray-600 border-2 outline-none rounded-md p-2"
 							placeholder="산행코스, 산행시간, 출발시간 등 산행일정에 대한 자세한 내용을 입력해주세요."
@@ -111,16 +130,18 @@ export default function Post() {
 						<label>첨부파일</label>
 						<input
 							onChange={(e) => {
-								setImgFile(e.target.value);
+								setImgUpload(e.target.files[0]);
 							}}
 							type="file"
 							className="img"
 						/>
 					</div>
 					<div className="flex justify-end space-x-2">
-						<button className="rounded-md bg-red-400 text-white py-2 px-4">
-							취소
-						</button>
+						<Link to="/club">
+							<button className="rounded-md bg-red-400 text-white py-2 px-4">
+								취소
+							</button>
+						</Link>
 						<button className="rounded-md bg-blue-500 text-white py-2 px-4">
 							등록
 						</button>
