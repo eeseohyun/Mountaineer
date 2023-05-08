@@ -28,7 +28,7 @@ const App = () => {
 				<Route path="/mypage/participated" element={<Participated />} />
 				<Route path="/club" element={<ClubPage />} />
 				<Route path="/post" element={<Post />} />
-				<Route path="/club:id" element={<Detail />} />
+				<Route path="/club/:postId" element={<Detail />} />
 			</Routes>
 		</>
 	);

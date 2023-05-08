@@ -1,4 +1,4 @@
-import { addDoc, serverTimestamp, collection } from "firebase/firestore";
+import { addDoc, Timestamp, collection, doc, getDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { db, storage } from "../firebase.config";
 import { useState, useContext, useEffect } from "react";
@@ -27,7 +27,7 @@ export default function Post() {
 	const navigate = useNavigate();
 
 	const postData = {
-		createdDate: serverTimestamp(),
+		createdDate: Timestamp.fromDate(new Date()),
 		title: title,
 		participantsNum: participantsNum,
 		schedule: schedule,
@@ -46,10 +46,12 @@ export default function Post() {
 
 			//업로드된 이미지의 URl을 가져와 Firestore에 저장
 			const imgUrl = await getDownloadURL(imageRef);
-
+			const nicknameRef = doc(db, "users", currentUser.uid);
+			const nicknameSnap = await getDoc(nicknameRef);
 			const userRef = await addDoc(collection(db, "club"), {
 				...postData,
 				img: imgUrl,
+				profile: nicknameSnap.data(),
 			});
 
 			alert("게시물을 업로드하였습니다!");

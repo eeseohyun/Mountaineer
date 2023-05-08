@@ -40,6 +40,7 @@ const Profile = () => {
 			console.log(error);
 		}
 	};
+
 	return (
 		<div className="max-w-2xl mx-auto">
 			<div className="bg-white shadow-md border border-gray-200 rounded-lg max-w-sm p-4 sm:p-6 lg:p-8  dark:bg-gray-800 dark:border-gray-700">
@@ -55,8 +56,7 @@ const Profile = () => {
 							<input
 								className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
 								type="text"
-								placeholder="변경할 닉네임"
-								value={nickname}
+								placeholder="새로 변경할 닉네임"
 								onChange={(e) => {
 									setNickname(e.target.value);
 								}}
