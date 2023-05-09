@@ -1,4 +1,5 @@
 import { useEffect, useContext, useState } from "react";
+import { BsPencilFill } from "react-icons/bs";
 import { listAll, ref, getDownloadURL } from "firebase/storage";
 import {
 	collection,
@@ -82,56 +83,64 @@ export default function ClubPage() {
 	};
 
 	return (
-		<div className="py-8 w-full">
-			<div className="flex justify-center mb-5">
-				<p
-					className="cursor-pointer mr-5 font-medium text-gray-500 hover:text-gray-800"
-					onClick={() => setCategory("전체")}
-				>
-					전체
-				</p>
-				<p
-					className="cursor-pointer mr-5 font-medium text-gray-500 hover:text-gray-800"
-					onClick={() => setCategory("서울")}
-				>
-					서울
-				</p>
-				<p
-					className="cursor-pointer mr-5 font-medium text-gray-500 hover:text-gray-800"
-					onClick={() => setCategory("경기")}
-				>
-					경기
-				</p>
-				<p
-					className="cursor-pointer mr-5 font-medium text-gray-500 hover:text-gray-800"
-					onClick={() => setCategory("강원")}
-				>
-					강원
-				</p>
-				<p
-					className="cursor-pointer mr-5 font-medium text-gray-500 hover:text-gray-800"
-					onClick={() => setCategory("충청")}
-				>
-					충청
-				</p>
-				<p
-					className="cursor-pointer mr-5 font-medium text-gray-500 hover:text-gray-800"
-					onClick={() => setCategory("전라")}
-				>
-					전라
-				</p>
-				<p
-					className="cursor-pointer mr-5 font-medium text-gray-500 hover:text-gray-800"
-					onClick={() => setCategory("경상")}
-				>
-					경상
-				</p>
-				<p
-					className="cursor-pointer mr-5 font-medium text-gray-500 hover:text-gray-800"
-					onClick={() => setCategory("제주")}
-				>
-					제주
-				</p>
+		<div className="py-5 w-full">
+			<div className="flex justify-around items-center mb-3">
+				<div className="flex justify-center">
+					<p
+						className="cursor-pointer mr-5 text-lg font-medium text-gray-500 hover:text-gray-800"
+						onClick={() => setCategory("전체")}
+					>
+						전체
+					</p>
+					<p
+						className="cursor-pointer text-lg mr-5 font-medium text-gray-500 hover:text-rose-500"
+						onClick={() => setCategory("서울")}
+					>
+						서울
+					</p>
+					<p
+						className="cursor-pointer text-lg mr-5 font-medium text-gray-500 hover:text-orange-400"
+						onClick={() => setCategory("경기")}
+					>
+						경기
+					</p>
+					<p
+						className="cursor-pointer text-lg mr-5 font-medium text-gray-500 hover:text-amber-400"
+						onClick={() => setCategory("강원")}
+					>
+						강원
+					</p>
+					<p
+						className="cursor-pointer text-lg mr-5 font-medium text-gray-500 hover:text-emerald-400"
+						onClick={() => setCategory("충청")}
+					>
+						충청
+					</p>
+					<p
+						className="cursor-pointer text-lg mr-5 font-medium text-gray-500 hover:text-sky-400"
+						onClick={() => setCategory("전라")}
+					>
+						전라
+					</p>
+					<p
+						className="cursor-pointer text-lg mr-5 font-medium text-gray-500 hover:text-blue-500"
+						onClick={() => setCategory("경상")}
+					>
+						경상
+					</p>
+					<p
+						className="cursor-pointer text-lg mr-5 font-medium text-gray-500 hover:text-purple-400"
+						onClick={() => setCategory("제주")}
+					>
+						제주
+					</p>
+				</div>
+				<Link to="/post">
+					<button className="flex text-sm items-center p-2 w-1/10 border border-gray-400 text-gray-500 rounded-none outline-none hover:rounded-lg duration-200">
+						글쓰기
+						<BsPencilFill className="ml-1" />
+					</button>
+				</Link>
 			</div>
 			{posts.map((post) => (
 				<div

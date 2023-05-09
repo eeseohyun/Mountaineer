@@ -27,13 +27,24 @@ export default function Detail() {
 			{detail ? (
 				<div className="p-10 justify-center">
 					<div className="min-w-2/3 rounded overflow-hidden shadow-lg ">
-						<img className="w-full" alt="Mountain" />
+						<img className="w-full" src={detail.img} alt="Mountain" />
 						<div className="px-6 py-4">
-							<div className="font-bold text-xl mb-2">{detail.title}</div>
-							<p className="text-gray-700 text-base">
-								일정 : {detail.schedule}
-							</p>
-							<p className="text-gray-700 text-base">{detail.context}</p>
+							<div className="font-bold text-2xl mb-2 ">{detail.title}</div>
+							<div className="profile flex items-center border-b-2">
+								<img
+									src={detail.profileImg}
+									className="h-10 w-10 rounded-full"
+								/>
+								<p className="text-gray-700 text-lg  ml-2">
+									{detail.userNickname}
+								</p>
+							</div>
+							<div className="context mt-3">
+								<p className="text-gray-700 font-semibold">
+									🗓️ 일정 : {detail.schedule}
+								</p>
+								<p className="text-gray-700 text-base">{detail.context}</p>
+							</div>
 						</div>
 						<div className="px-6 pt-4 pb-2">
 							<span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
@@ -43,6 +54,7 @@ export default function Detail() {
 								#모집중
 							</span>
 						</div>
+
 						<div className="px-6 pt-4 pb-2">
 							<form className="w-full rounded-lg">
 								<div className="flex flex-wrap">

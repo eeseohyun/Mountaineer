@@ -4,6 +4,7 @@ import { useContext, useState } from "react";
 import { AuthContext } from "../componenets/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { collection, getDocs, query, where } from "firebase/firestore";
+import { join } from "path";
 
 export default function Join() {
 	const [nickname, setNickname] = useState("");
@@ -13,6 +14,8 @@ export default function Join() {
 	const [confirmedPassword, setConfirmedPassword] = useState("");
 	const { currentUser } = useContext(AuthContext);
 	const navigate = useNavigate();
+
+	//닉네임 중복 검사
 	const checkNicknameDuplicate = async (nickname) => {
 		try {
 			const q = query(
@@ -40,8 +43,13 @@ export default function Join() {
 
 		try {
 			setErrorMsg("");
-			const user = await createUserWithEmailAndPassword(auth, email, password);
-			await updateProfile(user, { displayName: nickname });
+			const joinedUser = await createUserWithEmailAndPassword(
+				auth,
+				email,
+				password
+			);
+			await updateProfile(joinedUser.user, { displayName: nickname });
+
 			alert("회원가입이 완료되었습니다.");
 			navigate("/login");
 		} catch (error) {
@@ -64,7 +72,7 @@ export default function Join() {
 	};
 
 	return (
-		<div className="max-w-2xl mx-auto">
+		<div className="max-w-2xl mx-auto justify-center">
 			<div className="bg-white shadow-md border border-gray-200 rounded-lg max-w-sm p-4 sm:p-6 lg:p-8  dark:bg-gray-800 dark:border-gray-700">
 				<form className="space-y-6" onSubmit={handleJoin}>
 					<h1 className="text-2xl font-bold  text-gray-900 dark:text-white">

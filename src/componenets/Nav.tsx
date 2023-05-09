@@ -5,31 +5,15 @@ import { TbMountain } from "react-icons/tb";
 import { Link } from "react-router-dom";
 import { AuthContext } from "./AuthContext";
 import Logout from "./Logout";
-import { getDocs, doc } from "firebase/firestore";
 import { getDownloadURL, ref } from "firebase/storage";
-import { storage, db } from "../firebase.config";
+import { storage } from "../firebase.config";
 import Sidebar from "./Sidebar";
 
 const Nav = () => {
-	const { currentUser } = useContext(AuthContext);
+	const { currentUser, isLoggedIn } = useContext(AuthContext);
 	const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 	const [searchInput, setSearchInput] = useState("");
-	const [userProfile, setUserProfile] = useState(
-		"https://www.thechooeok.com/common/img/default_profile.png"
-	);
-
-	useEffect(() => {
-		const fetchProfile = async () => {
-			const storageRef = ref(storage, `${currentUser.uid}/profile`);
-			const url = await getDownloadURL(storageRef);
-			console.log();
-			setUserProfile(url);
-		};
-		if (currentUser) {
-			fetchProfile();
-		}
-	}, [currentUser]);
 
 	const handleSearchSubmit = (e) => {
 		e.preventDefault();
@@ -38,16 +22,17 @@ const Nav = () => {
 	};
 
 	return (
-		<nav className="navbar flex items-center justify-between py-4 px-6 bg-gray-800">
+		<nav className="navbar flex items-center justify-between py-4 px-6 bg-gray-800 z-10">
 			<div className="flex items-center">
 				<FaBars
 					className="h-7 w-7 text-white"
 					onClick={() => setIsSidebarOpen(!isSidebarOpen)}
 				/>
 
-				<div className="h-8 w-8 ml-2">
+				<div className="ml-5 flex justify-center items-center">
 					<Link to="/">
-						<TbMountain className="h-8 w-8 text-white" />
+						<TbMountain className="h-7 w-20 text-white items-center" />
+						<span className="text-white font-bold text-sm">Mountaineer</span>
 					</Link>
 				</div>
 			</div>
@@ -65,20 +50,18 @@ const Nav = () => {
 					/>
 				</form>
 				<div className="relative items-center justify-center">
-					{currentUser ? (
+					{isLoggedIn || (currentUser && currentUser.photoURL) ? (
 						<button
 							className="text-white font-semibold focus:outline-none"
 							onClick={() => {
 								setIsProfileModalOpen(!isProfileModalOpen);
 							}}
 						>
-							{userProfile && (
-								<img
-									src={userProfile}
-									alt="Profile Picture"
-									className="h-10 w-10 rounded-full mx-1"
-								/>
-							)}
+							<img
+								src={currentUser.photoURL}
+								alt="Profile Picture"
+								className="h-10 w-10 rounded-full mx-1"
+							/>
 						</button>
 					) : (
 						<>
@@ -95,16 +78,12 @@ const Nav = () => {
 							</Link>
 						</>
 					)}
-					{isProfileModalOpen && (
-						<div className="absolute mt-2 py-2 w-48 bg-white rounded-lg shadow-xl">
-							<Link to="/mypage">
-								<button>마이페이지</button>
-							</Link>
-							<br></br>
-							<Logout />
-						</div>
-					)}
 				</div>
+				{isProfileModalOpen && (
+					<div className="relative">
+						<Logout />
+					</div>
+				)}
 			</div>
 		</nav>
 	);

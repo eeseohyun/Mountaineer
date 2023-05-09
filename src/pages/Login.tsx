@@ -1,36 +1,36 @@
 import { auth, db } from "../firebase.config";
 import { doc, setDoc } from "firebase/firestore";
-import { useState, useContext } from "react";
+import { useState } from "react";
 import {
 	signInWithEmailAndPassword,
 	GoogleAuthProvider,
 	signInWithPopup,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../componenets/AuthContext";
 
 export default function Login() {
 	const [loginEmail, setLoginEmail] = useState("");
 	const [loginPassword, setLoginPassword] = useState("");
-	const { currentUser } = useContext(AuthContext);
+	const [errMsg, setErrMsg] = useState("");
 	const navigate = useNavigate();
 	//login
-	const handleLogin = async (event) => {
-		event.preventDefault();
+	const handleLogin = async (e) => {
+		e.preventDefault();
 		try {
 			await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
-			// setUser(userInfo.user);
-			const user = auth.currentUser;
-			const userRef = doc(db, "users", user.uid);
-			await setDoc(userRef, {
-				email: user?.email,
-			});
 			navigate("/");
 		} catch (error) {
-			if (error.code === "auth/user-not-found") {
-				alert("존재하는 계정이 없습니다.");
-			}
 			console.error(error.code);
+			switch (error.code) {
+				case "auth/wrong-password":
+					setErrMsg("이메일 혹은 비밀번호가 일치하지 않습니다");
+				case "auth/user-not-found":
+					setErrMsg("존재하는 계정이 없습니다.");
+					break;
+				default:
+					setErrMsg("로그인 중 오류가 발생했습니다");
+					break;
+			}
 		}
 	};
 	//google login
@@ -42,6 +42,11 @@ export default function Login() {
 				const credential = GoogleAuthProvider.credentialFromResult(result);
 				const token = credential?.accessToken;
 				const user = result.user;
+				setDoc(doc(db, "users", user.uid), {
+					nickname: user.displayName,
+					email: user.email,
+					photourl: user.photoURL,
+				});
 			})
 			.catch((error) => {
 				const errorCode = error.code;

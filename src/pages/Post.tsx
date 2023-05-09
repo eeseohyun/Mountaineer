@@ -33,30 +33,31 @@ export default function Post() {
 		schedule: schedule,
 		context: context,
 		category: category,
+		profileImg: currentUser.photoURL,
+		userNickname: currentUser.displayName,
 	};
 	const handlePost = async (e) => {
 		e.preventDefault();
 		try {
-			// 이미지를 storage에 업로드
-			const imageRef = ref(
-				storage,
-				`${currentUser.uid}/${new Date().getTime()}`
-			);
-			await uploadBytes(imageRef, imgUpload);
+			if (imgUpload) {
+				// 이미지를 storage에 업로드
+				const imageRef = ref(
+					storage,
+					`${currentUser.uid}/${new Date().getTime()}`
+				);
+				await uploadBytes(imageRef, imgUpload);
 
-			//업로드된 이미지의 URl을 가져와 Firestore에 저장
-			const imgUrl = await getDownloadURL(imageRef);
-			const nicknameRef = doc(db, "users", currentUser.uid);
-			const nicknameSnap = await getDoc(nicknameRef);
-			const userRef = await addDoc(collection(db, "club"), {
-				...postData,
-				img: imgUrl,
-				profile: nicknameSnap.data(),
-			});
+				//업로드된 이미지의 URl을 가져와 Firestore에 저장
+				const imgUrl = await getDownloadURL(imageRef);
+				const userRef = await addDoc(collection(db, "club"), {
+					...postData,
+					img: imgUrl,
+				});
 
-			alert("게시물을 업로드하였습니다!");
-			navigate("/club");
-			console.log(userRef);
+				alert("게시물을 업로드하였습니다!");
+				navigate("/club");
+				console.log(userRef);
+			}
 		} catch (error) {
 			console.log(error);
 		}

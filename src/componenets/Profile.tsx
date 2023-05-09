@@ -1,43 +1,41 @@
-// Profile.js
 import { useContext, useState } from "react";
-import { doc, updateDoc } from "firebase/firestore";
 import { AuthContext } from "./AuthContext";
 import { updateProfile } from "firebase/auth";
-import { db, storage } from "../firebase.config";
 import { useNavigate } from "react-router-dom";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { addDoc, collection } from "firebase/firestore";
+import { storage, db } from "../firebase.config";
 
 const Profile = () => {
 	const { currentUser } = useContext(AuthContext);
-	const [nickname, setNickname] = useState("");
-	const [profilePhoto, setProfilePhoto] = useState(
-		"https://www.thechooeok.com/common/img/default_profile.png"
-	);
+	const [newNickname, setNewNickname] = useState("");
+	const [newPhotoURL, setNewPhotoURL] = useState("");
+	const [newPhotoFile, setNewPhotoFile] = useState(null);
 	const navigate = useNavigate();
 
-	const profileData = {
-		nickname: nickname,
-		profileImg: profilePhoto,
-	};
-	const handleProfileUpdate = async (e) => {
+	const handleUpdate = async (e) => {
 		e.preventDefault();
+		const newUserInfo = {
+			displayName: newNickname || currentUser.displayName,
+			photoURL: currentUser.photoURL,
+			email: currentUser.email,
+		};
+		//유저 프로필 사진 storage에 저장하고 다운로드 url 가져오기
+		if (newPhotoFile) {
+			const photoRef = ref(storage, `users/${currentUser.uid}/profileImg.jpg`);
+			await uploadBytes(photoRef, newPhotoFile);
+			const photoUrl = await getDownloadURL(photoRef);
+			newUserInfo.photoURL = photoUrl;
+		}
 		try {
-			if (profilePhoto) {
-				const profileImageRef = ref(storage, `${currentUser.uid}/profile`);
-				await uploadBytes(profileImageRef, profilePhoto);
-
-				const downloadUrl = await getDownloadURL(profileImageRef);
-				profileData.profileImg = downloadUrl;
-			}
-
-			await updateProfile(currentUser, { displayName: nickname });
-
-			const userRef = doc(db, "users", currentUser.uid);
-			await updateDoc(userRef, profileData);
+			await updateProfile(currentUser, newUserInfo);
+			await addDoc(collection(db, "users"), {
+				...newUserInfo,
+			});
 			alert("수정이 완료되었습니다.");
 			navigate("/mypage");
 		} catch (error) {
-			console.log(error);
+			console.log(error.code);
 		}
 	};
 
@@ -45,7 +43,7 @@ const Profile = () => {
 		<div className="max-w-2xl mx-auto">
 			<div className="bg-white shadow-md border border-gray-200 rounded-lg max-w-sm p-4 sm:p-6 lg:p-8  dark:bg-gray-800 dark:border-gray-700">
 				{currentUser ? (
-					<form className="space-y-6" onSubmit={handleProfileUpdate}>
+					<form className="space-y-6" onSubmit={handleUpdate}>
 						<h1 className="text-2xl font-bold  text-gray-900 dark:text-white">
 							프로필 수정
 						</h1>
@@ -56,9 +54,17 @@ const Profile = () => {
 							<input
 								className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
 								type="text"
-								placeholder="새로 변경할 닉네임"
+								placeholder={
+									currentUser.displayName !== null
+										? currentUser.displayName
+										: "새로 변경할 닉네임"
+								}
 								onChange={(e) => {
-									setNickname(e.target.value);
+									if (e.target.value !== null) {
+										setNewNickname(currentUser.displayName);
+									} else {
+										setNewNickname(e.target.value);
+									}
 								}}
 							/>
 						</div>
@@ -79,7 +85,7 @@ const Profile = () => {
 							</label>
 							<input
 								type="file"
-								onChange={(e) => setProfilePhoto(e.target.files[0])}
+								onChange={(e) => setNewPhotoFile(e.target.files[0])}
 							/>
 						</div>
 						<button
