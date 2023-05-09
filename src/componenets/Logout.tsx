@@ -17,5 +17,11 @@ export default function Logout() {
 			console.error("로그아웃 중 에러 발생:", error);
 		}
 	};
-	return <button onClick={handleLogout}>로그아웃</button>;
+	return (
+		<div className="group-hover:text-red-500 group-hover:font-semibold w-full group-active:scale-95 self-stretch pl-2 rounded flex items-center space-x-2 transition-all duration-200 dark:group-hover:text-white dark:hover:text-white text-sm">
+			<span onClick={handleLogout} className="font-QuicksandMedium">
+				로그아웃
+			</span>
+		</div>
+	);
 }

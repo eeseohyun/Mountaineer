@@ -1,5 +1,6 @@
 import { useContext, useState, useEffect } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
+import { FaBars } from "react-icons/fa";
 import { TbMountain } from "react-icons/tb";
 import { Link } from "react-router-dom";
 import { AuthContext } from "./AuthContext";
@@ -7,11 +8,12 @@ import Logout from "./Logout";
 import { getDocs, doc } from "firebase/firestore";
 import { getDownloadURL, ref } from "firebase/storage";
 import { storage, db } from "../firebase.config";
+import Sidebar from "./Sidebar";
 
 const Nav = () => {
 	const { currentUser } = useContext(AuthContext);
-	const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
 	const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 	const [searchInput, setSearchInput] = useState("");
 	const [userProfile, setUserProfile] = useState(
 		"https://www.thechooeok.com/common/img/default_profile.png"
@@ -37,48 +39,20 @@ const Nav = () => {
 
 	return (
 		<nav className="navbar flex items-center justify-between py-4 px-6 bg-gray-800">
-			{/* Logo and Categories */}
 			<div className="flex items-center">
-				<div className="h-8 w-8 mr-2">
+				<FaBars
+					className="h-7 w-7 text-white"
+					onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+				/>
+
+				<div className="h-8 w-8 ml-2">
 					<Link to="/">
 						<TbMountain className="h-8 w-8 text-white" />
 					</Link>
 				</div>
-
-				<div className="relative">
-					<button
-						className="text-white font-semibold mr-3 ml-2 focus:outline-none"
-						onClick={() => {
-							setIsCategoryModalOpen(!isCategoryModalOpen);
-						}}
-					>
-						동호회 모집
-					</button>
-					{isCategoryModalOpen && (
-						<div className="absolute mt-2 py-2 w-48 bg-white rounded-lg shadow-xl z-1">
-							<li className="">전체</li>
-							<li className="">서울</li>
-							<li>경기</li>
-							<li>강원</li>
-							<li>충청</li>
-							<li>전라</li>
-							<li>경상</li>
-							<li>제주</li>
-						</div>
-					)}
-
-					<button className="text-white font-semibold mr-3 focus:outline-none">
-						자유 게시판
-					</button>
-					<button className="text-white font-semibold focus:outline-none">
-						정보 게시판
-					</button>
-				</div>
 			</div>
 
-			{/* Search Input and User Profile */}
 			<div className="flex items-center justify-center">
-				{/* Search Input */}
 				<form onSubmit={handleSearchSubmit}>
 					<input
 						type="text"
@@ -94,10 +68,9 @@ const Nav = () => {
 					{currentUser ? (
 						<button
 							className="text-white font-semibold focus:outline-none"
-							onMouseOver={() => {
+							onClick={() => {
 								setIsProfileModalOpen(!isProfileModalOpen);
 							}}
-							onMouseOut={() => setIsProfileModalOpen(!isProfileModalOpen)}
 						>
 							{userProfile && (
 								<img

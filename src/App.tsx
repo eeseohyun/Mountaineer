@@ -12,7 +12,9 @@ import Posted from "./componenets/Posted";
 import Post from "./pages/Post";
 import ClubPage from "./pages/ClubPage";
 import Detail from "./pages/Detail";
+import Board from "./pages/Board";
 import "./App.css";
+import ProfileModal from "./componenets/ProfileModal";
 
 const App = () => {
 	return (
@@ -29,6 +31,8 @@ const App = () => {
 				<Route path="/club" element={<ClubPage />} />
 				<Route path="/post" element={<Post />} />
 				<Route path="/club/:postId" element={<Detail />} />
+				<Route path="/profile" element={<ProfileModal />} />
+				<Route path="/board" element={<Board />} />
 			</Routes>
 		</>
 	);

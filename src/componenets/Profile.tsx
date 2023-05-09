@@ -1,6 +1,6 @@
 // Profile.js
 import { useContext, useState } from "react";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { AuthContext } from "./AuthContext";
 import { updateProfile } from "firebase/auth";
 import { db, storage } from "../firebase.config";
@@ -33,7 +33,7 @@ const Profile = () => {
 			await updateProfile(currentUser, { displayName: nickname });
 
 			const userRef = doc(db, "users", currentUser.uid);
-			await setDoc(userRef, profileData);
+			await updateDoc(userRef, profileData);
 			alert("수정이 완료되었습니다.");
 			navigate("/mypage");
 		} catch (error) {

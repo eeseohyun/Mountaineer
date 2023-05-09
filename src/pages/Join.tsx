@@ -1,28 +1,47 @@
-import { auth } from "../firebase.config";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth, db } from "../firebase.config";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { useContext, useState } from "react";
 import { AuthContext } from "../componenets/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { collection, getDocs, query, where } from "firebase/firestore";
 
 export default function Join() {
+	const [nickname, setNickname] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [errorMsg, setErrorMsg] = useState("");
 	const [confirmedPassword, setConfirmedPassword] = useState("");
 	const { currentUser } = useContext(AuthContext);
-
 	const navigate = useNavigate();
+	const checkNicknameDuplicate = async (nickname) => {
+		try {
+			const q = query(
+				collection(db, "users"),
+				where("nickname", "==", nickname)
+			);
+			const querySnapshot = await getDocs(q);
+			return querySnapshot.docs.length > 0;
+		} catch (error) {
+			console.log(error);
+			return false;
+		}
+	};
 	const handleJoin = async (e) => {
 		e.preventDefault();
-
 		if (password !== confirmedPassword) {
 			setErrorMsg("비밀번호가 일치하지 않습니다");
 			return;
 		}
+		const isNicknameDuplicated = await checkNicknameDuplicate(nickname);
+		if (isNicknameDuplicated) {
+			setErrorMsg("중복된 닉네임입니다.");
+			return;
+		}
+
 		try {
 			setErrorMsg("");
 			const user = await createUserWithEmailAndPassword(auth, email, password);
-			console.log(user);
+			await updateProfile(user, { displayName: nickname });
 			alert("회원가입이 완료되었습니다.");
 			navigate("/login");
 		} catch (error) {
@@ -51,6 +70,22 @@ export default function Join() {
 					<h1 className="text-2xl font-bold  text-gray-900 dark:text-white">
 						회원가입
 					</h1>
+					<div>
+						<label className="email text-sm font-medium text-gray-900 block mb-2 dark:text-gray-300">
+							닉네임
+						</label>
+						<input
+							className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+							placeholder="닉네임 입력"
+							type="text"
+							required
+							value={nickname}
+							onChange={(e) => setNickname(e.target.value)}
+						/>
+						{errorMsg === "중복된 닉네임입니다." && (
+							<p className="text-red-500 text-xs">{errorMsg}</p>
+						)}
+					</div>
 					<div>
 						<label className="email text-sm font-medium text-gray-900 block mb-2 dark:text-gray-300">
 							이메일
