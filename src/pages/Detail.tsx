@@ -30,7 +30,7 @@ export default function Detail() {
 						<img className="w-full" src={detail.img} alt="Mountain" />
 						<div className="px-6 py-4">
 							<div className="font-bold text-2xl mb-2 ">{detail.title}</div>
-							<div className="profile flex items-center border-b-2">
+							<div className="profile flex items-center border-b-2 pb-3">
 								<img
 									src={detail.profileImg}
 									className="h-10 w-10 rounded-full"

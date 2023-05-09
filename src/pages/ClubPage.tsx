@@ -46,6 +46,7 @@ export default function ClubPage() {
 				participantsNum: doc.data().participantsNum,
 				img: doc.data().img,
 				idx: doc.id,
+				isParticipationed: doc.data().isParticipationed,
 			}));
 			setPosts(postData);
 		};
@@ -67,21 +68,26 @@ export default function ClubPage() {
 		};
 		fetchPost();
 		fetchImg();
-	}, [category]);
+	}, [category, participationBtn]);
 
+	//참여하기 버튼 함수
 	const handleClick = async (idx) => {
 		const clubRef = doc(db, "club", idx);
 		const clubDoc = await getDoc(clubRef);
 		const participants = clubDoc.data().isParticipationed || [];
 
-		if (!participants.includes(currentUser.uid)) {
+		if (
+			currentUser &&
+			participants &&
+			!participants.includes(currentUser.uid)
+		) {
 			await updateDoc(clubRef, {
 				isParticipationed: [...participants, currentUser.uid],
 			});
 			setParticipationBtn(participationBtn + 1);
 		}
 	};
-
+	console.log(posts);
 	return (
 		<div className="py-5 w-full">
 			<div className="flex justify-around items-center mb-3">
@@ -176,7 +182,10 @@ export default function ClubPage() {
 							<div className="w-1/4 flex flex-col justify-center items-center">
 								<p className="text-xl font-bold">인원</p>
 								<p className="text-xl font-bold">
-									{posts.isParticipationed}/{post.participantsNum}
+									{post.isParticipationed == undefined
+										? 0
+										: post.isParticipationed.length}
+									/{post.participantsNum}
 								</p>
 								<div>
 									<button
@@ -184,7 +193,10 @@ export default function ClubPage() {
 										disabled={participationBtn !== 0}
 										className="mt-1 text-white bg-emerald-500 hover:bg-emerald-600 focus:ring-4 focus:ring-emerald-500 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-emerald-600 dark:hover:bg-emerald-700 dark:focus:ring-emerald-800"
 									>
-										{participationBtn === 0 ? "참여하기" : "참여완료"}
+										{post.isParticipationed &&
+										post.isParticipationed.includes(currentUser.uid)
+											? "참여완료"
+											: "참여하기"}
 									</button>
 								</div>
 							</div>
