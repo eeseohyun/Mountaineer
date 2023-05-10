@@ -5,6 +5,7 @@ import { storage } from "../firebase.config";
 import { db } from "../firebase.config";
 import { AuthContext } from "../componenets/AuthContext";
 import { useParams } from "react-router-dom";
+import Comments from "../componenets/Comments";
 
 export default function Detail() {
 	const { postId } = useParams();
@@ -29,15 +30,20 @@ export default function Detail() {
 					<div className="min-w-2/3 rounded overflow-hidden shadow-lg ">
 						<img className="w-full" src={detail.img} alt="Mountain" />
 						<div className="px-6 py-4">
-							<div className="font-bold text-2xl mb-2 ">{detail.title}</div>
+							<div className="font-bold text-2xl mb-3 ">{detail.title}</div>
 							<div className="profile flex items-center border-b-2 pb-3">
 								<img
 									src={detail.profileImg}
 									className="h-10 w-10 rounded-full"
 								/>
-								<p className="text-gray-700 text-lg  ml-2">
-									{detail.userNickname}
-								</p>
+								<div>
+									<p className="text-gray-700 text-lg  ml-2">
+										{detail.userNickname}
+									</p>
+									{/* <p className="text-gray-500 text-medium  ml-2">
+										{detail.createdDate.toDate().toLocaleString()}
+									</p> */}
+								</div>
 							</div>
 							<div className="context mt-3">
 								<p className="text-gray-700 font-semibold">
@@ -46,29 +52,16 @@ export default function Detail() {
 								<p className="text-gray-700 text-base">{detail.context}</p>
 							</div>
 						</div>
-						<div className="px-6 pt-4 pb-2">
+						<div className="px-6 pt-4 pb-3">
 							<span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
 								#{detail.category}
 							</span>
+
 							<span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
 								#모집중
 							</span>
 						</div>
-
-						<div className="px-6 pt-4 pb-2">
-							<form className="w-full rounded-lg">
-								<div className="flex flex-wrap">
-									<h2 className="text-gray-800 text-sm">댓글 쓰기</h2>
-									<div className="w-full md:w-full px-3 mb-2 mt-2">
-										<textarea
-											className="bg-gray-100 rounded border border-gray-300 leading-normal resize-none w-full h-20 py-2 px-3 font-sm placeholder-gray-400 focus:outline-none focus:bg-white"
-											placeholder="댓글을 남겨주세요."
-											required
-										></textarea>
-									</div>
-								</div>
-							</form>
-						</div>
+						<Comments />
 					</div>
 				</div>
 			) : (
