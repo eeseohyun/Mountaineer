@@ -5,6 +5,7 @@ import { doc, addDoc, Timestamp, query, orderBy } from "firebase/firestore";
 import { db } from "../firebase.config";
 import { getDocs, collection, updateDoc, deleteDoc } from "firebase/firestore";
 import { AuthContext } from "./AuthContext";
+import EditBtn from "./EditBtn";
 
 export default function Comments() {
 	const [comments, setComments] = useState([]);
@@ -134,13 +135,11 @@ export default function Comments() {
 							<p className="mr-5 ml-2 w-5/6">{comment.text}</p>
 							{currentUser.uid === comment.userId && (
 								<div className="flex w-1/6 justify-end">
-									<button onClick={() => setEditCommentId(comment.id)}>
-										<BsPencil className="text-gray-500 hover:text-black" />
-									</button>
-									<span className="ml-1 mr-1 text-gray-500">|</span>
-									<button onClick={() => handleDelete(comment.id)}>
-										<BsTrash className="text-gray-500 hover:text-black" />
-									</button>
+									<EditBtn
+										setEditCommentId={setEditCommentId}
+										handleDelete={handleDelete}
+										commentId={comment.id}
+									/>
 								</div>
 							)}
 						</div>
@@ -150,3 +149,11 @@ export default function Comments() {
 		</div>
 	);
 }
+
+// <button onClick={() => setEditCommentId(comment.id)}>
+// 	<BsPencil className="text-gray-500 hover:text-black" />
+// </button>
+// <span className="ml-1 mr-1 text-gray-500">|</span>
+// <button onClick={() => handleDelete(comment.id)}>
+// 	<BsTrash className="text-gray-500 hover:text-black" />
+// </button>
