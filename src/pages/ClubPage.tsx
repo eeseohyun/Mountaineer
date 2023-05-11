@@ -174,9 +174,19 @@ export default function ClubPage() {
 									<p className="text-m leading-normal pt-2 text-gray-500">
 										일정 : {post.schedule}
 									</p>
-									<p className="w-12 py-2 px-3 mt-2 text-xs text-center text-indigo-700 rounded-full bg-indigo-100">
-										{post.category}
-									</p>
+									<div className="flex">
+										<p className="w-12 py-2 px-3 mt-2 mr-1 text-xs text-center text-indigo-700 rounded-2xl bg-indigo-100">
+											{post.category}
+										</p>
+
+										{post.isParticipationed &&
+											post.isParticipationed.length ===
+												post.participantsNum && (
+												<p className="w-20 py-2 px-3 mt-2 text-xs text-center text-white rounded-2xl bg-neutral-400">
+													모집완료
+												</p>
+											)}
+									</div>
 								</div>
 							</div>
 							<div className="w-1/4 flex flex-col justify-center items-center">
@@ -187,18 +197,29 @@ export default function ClubPage() {
 										: post.isParticipationed.length}
 									/{post.participantsNum}
 								</p>
-								<div>
+								{(post.isParticipationed &&
+									post.isParticipationed.length === post.participantsNum) ||
+								new Date(post.schedule) <= new Date() ? (
 									<button
-										onClick={() => handleClick(post.idx)}
-										disabled={participationBtn !== 0}
-										className="mt-1 text-white bg-emerald-500 hover:bg-emerald-600 focus:ring-4 focus:ring-emerald-500 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-emerald-600 dark:hover:bg-emerald-700 dark:focus:ring-emerald-800"
+										disabled
+										className="font-medium rounded-lg text-sm px-5 py-2.5 text-cente mt-1 text-white bg-neutral-400"
 									>
-										{post.isParticipationed &&
-										post.isParticipationed.includes(currentUser.uid)
-											? "참여완료"
-											: "참여하기"}
+										모집완료
 									</button>
-								</div>
+								) : (
+									<div>
+										<button
+											onClick={() => handleClick(post.idx)}
+											disabled={participationBtn !== 0}
+											className="mt-1 text-white bg-emerald-500 hover:bg-emerald-600 focus:ring-4 focus:ring-emerald-500 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-emerald-600 dark:hover:bg-emerald-700 dark:focus:ring-emerald-800"
+										>
+											{post.isParticipationed &&
+											post.isParticipationed.includes(currentUser.uid)
+												? "참여완료"
+												: "참여하기"}
+										</button>
+									</div>
+								)}
 							</div>
 						</div>
 					</div>
