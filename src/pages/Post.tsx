@@ -2,7 +2,7 @@ import { addDoc, Timestamp, collection, doc, getDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { db, storage } from "../firebase.config";
 import { useState, useContext, useEffect } from "react";
-import { AuthContext } from "../componenets/AuthContext";
+import { AuthContext } from "../components/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 

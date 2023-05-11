@@ -3,9 +3,9 @@ import { getDoc, getDocs, doc } from "firebase/firestore";
 import { ref, getDownloadURL } from "firebase/storage";
 import { storage } from "../firebase.config";
 import { db } from "../firebase.config";
-import { AuthContext } from "../componenets/AuthContext";
+import { AuthContext } from "../components/AuthContext";
 import { useParams } from "react-router-dom";
-import Comments from "../componenets/Comments";
+import Comments from "../components/Comments";
 
 export default function Detail() {
 	const { postId } = useParams();

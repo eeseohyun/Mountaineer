@@ -1,7 +1,7 @@
 import { auth, db } from "../firebase.config";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { useContext, useState } from "react";
-import { AuthContext } from "../componenets/AuthContext";
+import { AuthContext } from "../components/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { join } from "path";

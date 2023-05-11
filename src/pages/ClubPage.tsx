@@ -12,14 +12,19 @@ import {
 	where,
 } from "firebase/firestore";
 import { storage, db } from "../firebase.config";
-import { AuthContext } from "../componenets/AuthContext";
+import { AuthContext } from "../components/AuthContext";
 import { Link } from "react-router-dom";
+import Pagination from "../components/Pagination";
 
 export default function ClubPage() {
 	const [img, setImg] = useState("");
 	const [posts, setPosts] = useState([]);
 	const [participationBtn, setParticipationBtn] = useState(0);
 	const [category, setCategory] = useState("전체");
+	//pagination
+	const [limit, setLimit] = useState(5);
+	const [page, setPage] = useState(1);
+	const offset = (page - 1) * limit;
 	const { currentUser } = useContext(AuthContext);
 
 	useEffect(() => {
@@ -148,7 +153,7 @@ export default function ClubPage() {
 					</button>
 				</Link>
 			</div>
-			{posts.map((post) => (
+			{posts.slice(offset, offset + limit).map((post) => (
 				<div
 					key={post.idx}
 					className="sm:flex items-center justify-center w-full"
@@ -225,6 +230,14 @@ export default function ClubPage() {
 					</div>
 				</div>
 			))}
+			<div className="flex justify-center mt-3">
+				<Pagination
+					total={posts.length}
+					limit={limit}
+					page={page}
+					setPage={setPage}
+				/>
+			</div>
 		</div>
 	);
 }
