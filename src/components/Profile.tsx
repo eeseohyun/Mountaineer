@@ -59,6 +59,7 @@ const Profile = () => {
 										? currentUser.displayName
 										: "새로 변경할 닉네임"
 								}
+								value={currentUser.displayName}
 								onChange={(e) => {
 									if (e.target.value !== null) {
 										setNewNickname(currentUser.displayName);

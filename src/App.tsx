@@ -14,13 +14,11 @@ import Detail from "./pages/Detail";
 import Board from "./pages/Board";
 import "./App.css";
 import ProfileModal from "./components/ProfileModal";
-import Comments from "./components/Comments";
 
 const App = () => {
 	return (
 		<>
 			<Nav />
-
 			<Routes>
 				<Route path="/" element={<Home />} />
 				<Route path="/login" element={<Login />} />
@@ -31,9 +29,7 @@ const App = () => {
 				<Route path="/club" element={<ClubPage />} />
 				<Route path="/post" element={<Post />} />
 				<Route path="/club/:postId" element={<Detail />} />
-				<Route path="/profile" element={<ProfileModal />} />
 				<Route path="/board" element={<Board />} />
-				<Route path="/clubcomments/:postId" element={<Comments />} />
 			</Routes>
 		</>
 	);

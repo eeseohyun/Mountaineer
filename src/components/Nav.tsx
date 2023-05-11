@@ -8,6 +8,7 @@ import Logout from "./Logout";
 import { getDownloadURL, ref } from "firebase/storage";
 import { storage } from "../firebase.config";
 import Sidebar from "./Sidebar";
+import ProfileModal from "./ProfileModal";
 
 const Nav = () => {
 	const { currentUser, isLoggedIn } = useContext(AuthContext);
@@ -22,7 +23,7 @@ const Nav = () => {
 	};
 
 	return (
-		<nav className="navbar flex items-center justify-between py-4 px-6 bg-gray-800 z-10">
+		<nav className="navbar flex items-center justify-between py-4 px-6 bg-gray-800 z-10 relative">
 			<div className="flex items-center">
 				<FaBars
 					className="h-7 w-7 text-white"
@@ -49,12 +50,13 @@ const Nav = () => {
 						}}
 					/>
 				</form>
+
 				<div className="relative items-center justify-center">
-					{isLoggedIn || (currentUser && currentUser.photoURL) ? (
+					{currentUser && currentUser.photoURL ? (
 						<button
 							className="text-white font-semibold focus:outline-none"
 							onClick={() => {
-								setIsProfileModalOpen(!isProfileModalOpen);
+								setIsProfileModalOpen(true);
 							}}
 						>
 							<img
@@ -79,11 +81,11 @@ const Nav = () => {
 						</>
 					)}
 				</div>
-				{isProfileModalOpen && (
-					<div className="relative">
-						<Logout />
-					</div>
-				)}
+				<div className="absolute top-20">
+					{isProfileModalOpen && (
+						<ProfileModal setIsProfileModalOpen={setIsProfileModalOpen} />
+					)}
+				</div>
 			</div>
 		</nav>
 	);

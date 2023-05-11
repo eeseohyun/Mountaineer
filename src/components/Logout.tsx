@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "./AuthContext";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase.config";
+import { FiLogOut } from "react-icons/fi";
 
 export default function Logout() {
 	const { currentUser } = useContext(AuthContext);
@@ -18,10 +19,9 @@ export default function Logout() {
 		}
 	};
 	return (
-		<div className="group-hover:text-red-500 group-hover:font-semibold w-full group-active:scale-95 self-stretch pl-2 rounded flex items-center space-x-2 transition-all duration-200 dark:group-hover:text-white dark:hover:text-white text-sm">
-			<span onClick={handleLogout} className="font-QuicksandMedium">
-				로그아웃
-			</span>
-		</div>
+		<button onClick={handleLogout} className="tr-300">
+			<FiLogOut className="h-14 w-14 text-red-400 hover:text-red-500" />
+			<span className="text-medium font-medium text-gray-500">로그아웃</span>
+		</button>
 	);
 }
