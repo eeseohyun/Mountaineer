@@ -52,7 +52,7 @@ export default function Search() {
 			</div>
 			<div className="w-full">
 				{postResults.map((result) => (
-					<Link to={`/club/${result.id}`}>
+					<Link to={currentUser ? `/club/${result.id}` : "/login"}>
 						<div key={result.id} className="p-7 hover:bg-gray-50">
 							<p className="font-semibold text-xl mb-2">{result.title}</p>
 							<div className="flex items-center">

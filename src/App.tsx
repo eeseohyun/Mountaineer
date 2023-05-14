@@ -10,7 +10,7 @@ import Participated from "./components/Participated";
 import Post from "./pages/Post";
 import ClubPage from "./pages/ClubPage";
 import Detail from "./pages/Detail";
-import Board from "./pages/Board";
+import Mypage from "./pages/Mypage";
 import Footer from "./components/Footer";
 import Search from "./pages/Search";
 import "./App.css";
@@ -29,7 +29,7 @@ const App = () => {
 				<Route path="/club" element={<ClubPage />} />
 				<Route path="/post" element={<Post />} />
 				<Route path="/club/:postId" element={<Detail />} />
-				<Route path="/board" element={<Board />} />
+				<Route path="/mypage" element={<Mypage />} />
 			</Routes>
 			<Footer />
 		</div>
