@@ -10,7 +10,13 @@ export default {
 			xl: "1280px",
 			xl2: "1360px",
 		},
-		extend: {},
+		extend: {
+			spacing: {
+				"88px": "88px",
+				"92px": "92px",
+				"100px": "100px",
+			},
+		},
 	},
 	plugins: [],
 };

@@ -1,24 +1,24 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { FaBars } from "react-icons/fa";
 import { TbMountain } from "react-icons/tb";
 import { Link } from "react-router-dom";
 import { AuthContext } from "./AuthContext";
-import Logout from "./Logout";
-import { getDownloadURL, ref } from "firebase/storage";
-import { storage } from "../firebase.config";
 import Sidebar from "./Sidebar";
 import ProfileModal from "./ProfileModal";
+import { useNavigate } from "react-router-dom";
 
 const Nav = () => {
-	const { currentUser, isLoggedIn } = useContext(AuthContext);
+	const { currentUser } = useContext(AuthContext);
 	const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 	const [searchInput, setSearchInput] = useState("");
+	const navigate = useNavigate();
 
 	const handleSearchSubmit = (e) => {
 		e.preventDefault();
-		// Handle search submit
+		navigate(`/search?keyword=${searchInput}`);
+		setSearchInput("");
 		console.log(`Search submitted: ${searchInput}`);
 	};
 
@@ -26,13 +26,13 @@ const Nav = () => {
 		<nav className="navbar flex items-center justify-between py-4 px-6 bg-gray-800 z-10 relative">
 			<div className="flex items-center">
 				<FaBars
-					className="h-7 w-7 text-white"
+					className="h-7 w-7 text-white cursor-pointer"
 					onClick={() => setIsSidebarOpen(!isSidebarOpen)}
 				/>
 
 				<div className="ml-5 flex justify-center items-center">
 					<Link to="/">
-						<TbMountain className="h-7 w-20 text-white items-center" />
+						<TbMountain className="h-7 w-20 text-white items-center cursor-pointer" />
 						<span className="text-white font-bold text-sm">Mountaineer</span>
 					</Link>
 				</div>
@@ -51,7 +51,7 @@ const Nav = () => {
 					/>
 				</form>
 
-				<div className="relative items-center justify-center">
+				<div className="items-center justify-center">
 					{currentUser && currentUser.photoURL ? (
 						<button
 							className="text-white font-semibold focus:outline-none"
@@ -86,6 +86,7 @@ const Nav = () => {
 						<ProfileModal setIsProfileModalOpen={setIsProfileModalOpen} />
 					)}
 				</div>
+				{isSidebarOpen && <Sidebar />}
 			</div>
 		</nav>
 	);

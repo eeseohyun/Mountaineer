@@ -94,7 +94,7 @@ export default function ClubPage() {
 	};
 	console.log(posts);
 	return (
-		<div className="py-5 w-full">
+		<div className="py-5 w-full min-h-screen">
 			<div className="flex justify-around items-center mb-3">
 				<div className="flex justify-center">
 					<p
@@ -162,16 +162,16 @@ export default function ClubPage() {
 						<div className="flex items-center  border-gray-200 pb-3">
 							<img src={post.img} className="w-40 h-30" />
 							<div className="flex items-start justify-between w-full">
-								<div className="pl-4 w-1/2">
+								<div className="w-1/2 flex flex-col ml-5">
 									{currentUser !== null ? (
 										<Link to={`/club/${post.idx}`}>
-											<p className="text-xl font-bold leading-5 text-gray-800">
+											<p className="text-xl font-bold leading-4 text-gray-800">
 												{post.title}
 											</p>
 										</Link>
 									) : (
 										<Link to="/login">
-											<p className="text-xl font-bold leading-5 text-gray-800">
+											<p className="text-xl font-bold leading-4 text-gray-800">
 												{post.title}
 											</p>
 										</Link>
