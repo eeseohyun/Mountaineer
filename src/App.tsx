@@ -5,7 +5,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Join from "./pages/Join";
 import Nav from "./components/Nav";
-import Profile from "./components/Profile";
+import Profile from "./pages/Profile";
 import Participated from "./components/Participated";
 import Post from "./pages/Post";
 import ClubPage from "./pages/ClubPage";

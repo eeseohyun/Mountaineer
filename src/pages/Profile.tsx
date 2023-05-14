@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { AuthContext } from "./AuthContext";
+import { AuthContext } from "../components/AuthContext";
 import { updateProfile } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";

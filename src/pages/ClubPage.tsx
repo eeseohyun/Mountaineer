@@ -160,7 +160,7 @@ export default function ClubPage() {
 				>
 					<div className="sm:w-full lg:m-7 lg:mb-0 mb-3 bg-white p-5 shadow rounded hover:bg-neutral-100">
 						<div className="flex items-center  border-gray-200 pb-3">
-							<img src={post.img} className="w-40 h-30" />
+							<img src={post.img} className="h-32 w-44" />
 							<div className="flex items-start justify-between w-full">
 								<div className="w-1/2 flex flex-col ml-5">
 									{currentUser !== null ? (
