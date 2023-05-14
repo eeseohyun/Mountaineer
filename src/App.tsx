@@ -10,7 +10,8 @@ import Participated from "./components/Participated";
 import Post from "./pages/Post";
 import ClubPage from "./pages/ClubPage";
 import Detail from "./pages/Detail";
-import Mypage from "./pages/Mypage";
+import MyPosts from "./pages/MyPosts";
+import MyClubs from "./pages/MyClubs";
 import Footer from "./components/Footer";
 import Search from "./pages/Search";
 import "./App.css";
@@ -29,7 +30,8 @@ const App = () => {
 				<Route path="/club" element={<ClubPage />} />
 				<Route path="/post" element={<Post />} />
 				<Route path="/club/:postId" element={<Detail />} />
-				<Route path="/mypage" element={<Mypage />} />
+				<Route path="/mypage/myposts" element={<MyPosts />} />
+				<Route path="/mypage/myclubs" element={<MyClubs />} />
 			</Routes>
 			<Footer />
 		</div>

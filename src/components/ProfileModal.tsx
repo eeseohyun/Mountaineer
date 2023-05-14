@@ -74,20 +74,26 @@ export default function ProfileModal({ setIsProfileModalOpen }) {
 					<span className="font-bold text-lg">{currentUser?.displayName}</span>
 				</div>
 				<div className="grid px-7 py-2 items-center justify-around grid-cols-2 gap-3 divide-x divide-solid">
-					<div className="col-span-1 flex flex-col items-center">
-						<span className="text-2xl font-bold text-indigo-600 dark:text-gray-500">
-							{userPosts.length}
-						</span>
-						<span className="text-lg font-medium text-indigo-600">게시물</span>
-					</div>
-					<div className="col-span-1 px-3 flex flex-col items-center">
-						<span className="text-2xl font-bold text-indigo-600 dark:text-gray-500">
-							{userMountains?.length}
-						</span>
-						<span className="text-lg font-medium text-indigo-600">
-							산악참여
-						</span>
-					</div>
+					<Link to="/mypage/myposts">
+						<div className="col-span-1 flex flex-col items-center">
+							<span className="text-2xl font-bold text-indigo-600 dark:text-gray-500">
+								{userPosts.length}
+							</span>
+							<span className="text-lg font-medium text-indigo-600">
+								게시물
+							</span>
+						</div>
+					</Link>
+					<Link to="/mypage/myclubs">
+						<div className="col-span-1 px-3 flex flex-col items-center">
+							<span className="text-2xl font-bold text-indigo-600 dark:text-gray-500">
+								{userMountains?.length}
+							</span>
+							<span className="text-lg font-medium text-indigo-600">
+								산악참여
+							</span>
+						</div>
+					</Link>
 				</div>
 			</div>
 			<div className="grid rounded-2xl divide-y divide-dashed justify-evenly bg-gray-50 dark:bg-gray-300 m-3 mt-10 grid-cols-3">
