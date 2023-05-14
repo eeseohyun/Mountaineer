@@ -11,18 +11,7 @@ export default function Carousels() {
 	];
 
 	return (
-		<Carousel
-			height="650px"
-			autoPlay={true}
-			showArrows={true}
-			infiniteLoop={true}
-			showStatus={false}
-			showThumbs={false}
-			showIndicators={true}
-			interval={5000}
-			swipeable={true}
-			dynamicHeight={false}
-		>
+		<Carousel height="650px" autoPlay={true} interval={5000} swipe={true}>
 			<div className="relative h-full w-full">
 				<img
 					src={images[0]}
