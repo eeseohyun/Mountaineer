@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./components/AuthContext";
 // componenets
-import Home from "./pages/Home";
+import Home from "./components/Carousels";
 import Login from "./pages/Login";
 import Join from "./pages/Join";
 import Nav from "./components/Nav";
@@ -12,13 +12,14 @@ import ClubPage from "./pages/ClubPage";
 import Detail from "./pages/Detail";
 import Board from "./pages/Board";
 import "./App.css";
+import Carousels from "./components/Carousels";
 
 const App = () => {
 	return (
 		<>
 			<Nav />
 			<Routes>
-				<Route path="/" element={<Home />} />
+				<Route path="/" element={<Carousels />} />
 				<Route path="/login" element={<Login />} />
 				<Route path="/join" element={<Join />} />
 				<Route path="/mypage/profile" element={<Profile />} />

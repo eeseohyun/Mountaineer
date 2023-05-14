@@ -63,6 +63,7 @@ export default function ProfileModal({ setIsProfileModalOpen }) {
 					<AiOutlineClose />
 				</button>
 			</div>
+			<span className="flex justify-center text-2xl font-bold">PROFILE</span>
 			<div className="bg-indigo-200 shadow-lg pb-3 rounded-b-3xl">
 				<div className="flex rounded-b-3xl bg-gray-100 dark:bg-gray-700 space-y-5 flex-col items-center py-7">
 					<img
