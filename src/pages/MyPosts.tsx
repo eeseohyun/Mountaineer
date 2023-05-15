@@ -16,7 +16,7 @@ export default function MyPosts() {
 				const board = collection(db, "club");
 				let querySnapshot;
 				querySnapshot = await getDocs(
-					query(board, where("userNickname", "==", currentUser.displayName))
+					query(board, where("userId", "==", currentUser.uid))
 				);
 				const posts = querySnapshot.docs.map((doc) => ({
 					id: doc.id,

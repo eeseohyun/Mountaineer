@@ -52,9 +52,15 @@ export default function Comments() {
 		setCommentText("");
 	};
 	const handleDelete = async (id) => {
-		const postRef = doc(db, "club", postId);
-		const commentsRef = collection(postRef, "comments");
-		await deleteDoc(doc(commentsRef, id));
+		if (confirm("삭제하시겠습니까?") == true) {
+			const postRef = doc(db, "club", postId);
+			const commentsRef = collection(postRef, "comments");
+			await deleteDoc(doc(commentsRef, id)).then(() =>
+				alert("삭제가 완료되었습니다.")
+			);
+		} else {
+			return;
+		}
 
 		setComments(comments.filter((comment) => comment.id !== id));
 	};
@@ -63,14 +69,13 @@ export default function Comments() {
 		const postRef = doc(db, "club", postId);
 		const commentsRef = collection(postRef, "comments");
 		const commentRef = doc(commentsRef, id);
-		await updateDoc(commentRef, { text: commentText });
+		await updateDoc(commentRef, { text: editText });
 
 		//수정된 댓글을 comments 상태에 업데이트
 		const updatedComments = comments.map((comment) =>
-			comment.id === id ? { ...comment, text: commentText } : comment
+			comment.id === id ? { ...comment, text: editText } : comment
 		);
 		setComments(updatedComments);
-
 		setEditCommentId(null);
 		setCommentText("");
 	};
@@ -119,8 +124,8 @@ export default function Comments() {
 						<div className="flex items-center px-10">
 							<input
 								type="text"
-								value={commentText}
-								onChange={(e) => setCommentText(e.target.value)}
+								value={comment.text}
+								onChange={(e) => setEditText(e.target.value)}
 								className="w-5/6 bg-gray-100 rounded-l-lg border border-gray-300 leading-normal resize-none py-1 px-3 font-sm placeholder-gray-400 focus:outline-none focus:bg-white"
 							/>
 							<button

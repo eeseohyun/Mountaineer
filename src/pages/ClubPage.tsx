@@ -1,4 +1,5 @@
 import { useEffect, useContext, useState } from "react";
+import { ClipLoader } from "react-spinners";
 import { BsPencilFill } from "react-icons/bs";
 import { listAll, ref, getDownloadURL } from "firebase/storage";
 import {
@@ -21,6 +22,7 @@ export default function ClubPage() {
 	const [posts, setPosts] = useState([]);
 	const [participationBtn, setParticipationBtn] = useState(0);
 	const [category, setCategory] = useState("전체");
+	const [loading, setLoading] = useState(true);
 	//pagination
 	const [limit, setLimit] = useState(5);
 	const [page, setPage] = useState(1);
@@ -73,6 +75,7 @@ export default function ClubPage() {
 		};
 		fetchPost();
 		fetchImg();
+		setLoading(false);
 	}, [category, participationBtn]);
 
 	//참여하기 버튼 함수
@@ -153,82 +156,83 @@ export default function ClubPage() {
 					</button>
 				</Link>
 			</div>
-			{posts.slice(offset, offset + limit).map((post) => (
-				<div
-					key={post.idx}
-					className="sm:flex items-center justify-center w-full"
-				>
-					<div className="sm:w-full lg:m-7 lg:mb-0 mb-3 bg-white p-5 shadow rounded hover:bg-neutral-100">
-						<div className="flex items-center  border-gray-200 pb-3">
-							<img src={post.img} className="h-32 w-44" />
-							<div className="flex items-start justify-between w-full">
-								<div className="w-1/2 flex flex-col ml-5">
-									{currentUser !== null ? (
-										<Link to={`/club/${post.idx}`}>
-											<p className="text-xl font-bold leading-4 text-gray-800">
-												{post.title}
+			{loading ? (
+				<div className="flex justify-center items-center h-screen">
+					<ClipLoader color="#FCA5A5" size={150} />
+				</div>
+			) : (
+				<>
+					{posts.slice(offset, offset + limit).map((post) => (
+						<div
+							key={post.idx}
+							className="sm:flex items-center justify-center w-full"
+						>
+							<div className="sm:w-full lg:m-7 lg:mb-0 mb-3 bg-white p-5 shadow rounded hover:bg-neutral-100">
+								<div className="flex items-center  border-gray-200 pb-3">
+									<img src={post.img} className="h-32 w-44" />
+									<div className="flex items-start justify-between w-full">
+										<div className="w-1/2 flex flex-col ml-5">
+											<Link to={currentUser ? `/club/${post.idx}` : "/login"}>
+												<p className="text-xl font-bold leading-4 text-gray-800">
+													{post.title}
+												</p>
+											</Link>
+											<p className="text-m leading-normal pt-2 text-gray-500">
+												일정 : {post.schedule}
 											</p>
-										</Link>
-									) : (
-										<Link to="/login">
-											<p className="text-xl font-bold leading-4 text-gray-800">
-												{post.title}
-											</p>
-										</Link>
-									)}
-									<p className="text-m leading-normal pt-2 text-gray-500">
-										일정 : {post.schedule}
-									</p>
-									<div className="flex">
-										<p className="w-12 py-2 px-3 mt-2 mr-1 text-xs text-center text-indigo-700 rounded-2xl bg-indigo-100">
-											{post.category}
+											<div className="flex">
+												<p className="w-12 py-2 px-3 mt-2 mr-1 text-xs text-center text-indigo-700 rounded-2xl bg-indigo-100">
+													{post.category}
+												</p>
+												{(post.isParticipationed &&
+													post.isParticipationed.length ===
+														post.participantsNum) ||
+												new Date(post.schedule) <= new Date() ? (
+													<p className="w-20 py-2 px-3 mt-2 text-xs text-center text-white rounded-2xl bg-neutral-400">
+														모집완료
+													</p>
+												) : null}
+											</div>
+										</div>
+									</div>
+									<div className="w-1/4 flex flex-col justify-center items-center">
+										<p className="text-xl font-bold">인원</p>
+										<p className="text-xl font-bold">
+											{post.isParticipationed == undefined
+												? 0
+												: post.isParticipationed.length}
+											/{post.participantsNum}
 										</p>
 										{(post.isParticipationed &&
 											post.isParticipationed.length === post.participantsNum) ||
 										new Date(post.schedule) <= new Date() ? (
-											<p className="w-20 py-2 px-3 mt-2 text-xs text-center text-white rounded-2xl bg-neutral-400">
+											<button
+												disabled
+												className="font-medium rounded-lg text-sm px-5 py-2.5 text-cente mt-1 text-white bg-neutral-400"
+											>
 												모집완료
-											</p>
-										) : null}
+											</button>
+										) : (
+											<div>
+												<button
+													onClick={() => handleClick(post.idx)}
+													disabled={participationBtn !== 0}
+													className="mt-1 text-white bg-emerald-500 hover:bg-emerald-600 focus:ring-4 focus:ring-emerald-500 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-emerald-600 dark:hover:bg-emerald-700 dark:focus:ring-emerald-800"
+												>
+													{post.isParticipationed &&
+													post.isParticipationed.includes(currentUser.uid)
+														? "참여완료"
+														: "참여하기"}
+												</button>
+											</div>
+										)}
 									</div>
 								</div>
 							</div>
-							<div className="w-1/4 flex flex-col justify-center items-center">
-								<p className="text-xl font-bold">인원</p>
-								<p className="text-xl font-bold">
-									{post.isParticipationed == undefined
-										? 0
-										: post.isParticipationed.length}
-									/{post.participantsNum}
-								</p>
-								{(post.isParticipationed &&
-									post.isParticipationed.length === post.participantsNum) ||
-								new Date(post.schedule) <= new Date() ? (
-									<button
-										disabled
-										className="font-medium rounded-lg text-sm px-5 py-2.5 text-cente mt-1 text-white bg-neutral-400"
-									>
-										모집완료
-									</button>
-								) : (
-									<div>
-										<button
-											onClick={() => handleClick(post.idx)}
-											disabled={participationBtn !== 0}
-											className="mt-1 text-white bg-emerald-500 hover:bg-emerald-600 focus:ring-4 focus:ring-emerald-500 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-emerald-600 dark:hover:bg-emerald-700 dark:focus:ring-emerald-800"
-										>
-											{post.isParticipationed &&
-											post.isParticipationed.includes(currentUser.uid)
-												? "참여완료"
-												: "참여하기"}
-										</button>
-									</div>
-								)}
-							</div>
 						</div>
-					</div>
-				</div>
-			))}
+					))}
+				</>
+			)}
 			<div className="flex justify-center mt-3">
 				<Pagination
 					total={posts.length}

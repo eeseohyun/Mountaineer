@@ -35,6 +35,7 @@ export default function Post() {
 		category: category,
 		profileImg: currentUser.photoURL,
 		userNickname: currentUser.displayName,
+		userId: currentUser.uid,
 	};
 	const handlePost = async (e) => {
 		e.preventDefault();

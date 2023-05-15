@@ -39,7 +39,11 @@ const Nav = () => {
 
 				<div className="ml-5 flex justify-center items-center">
 					<Link to="/">
-						<img src="public/logo.png" className="cursor-pointer h-13 w-20" />
+						<img
+							src="public/logo2.png"
+							className="cursor-pointer h-13 w-10 ml-5"
+						/>
+						<p className="text-white font-semibold">Mountaineer</p>
 					</Link>
 				</div>
 			</div>
