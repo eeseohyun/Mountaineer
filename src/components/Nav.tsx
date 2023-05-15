@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useRef } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { FaBars } from "react-icons/fa";
 import { TbMountain } from "react-icons/tb";
@@ -14,12 +14,19 @@ const Nav = () => {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 	const [searchInput, setSearchInput] = useState("");
 	const navigate = useNavigate();
+	const outSide = useRef();
 
 	const handleSearchSubmit = (e) => {
 		e.preventDefault();
 		navigate(`/search?keyword=${searchInput}`);
 		setSearchInput("");
 		console.log(`Search submitted: ${searchInput}`);
+	};
+
+	const sidebarOutSideClick = (e) => {
+		if (isSidebarOpen && outSide.current === e.target) {
+			setIsSidebarOpen(false);
+		}
 	};
 
 	return (
@@ -32,8 +39,7 @@ const Nav = () => {
 
 				<div className="ml-5 flex justify-center items-center">
 					<Link to="/">
-						<TbMountain className="h-7 w-20 text-white items-center cursor-pointer" />
-						<span className="text-white font-bold text-sm">Mountaineer</span>
+						<img src="public/logo.png" className="cursor-pointer h-13 w-20" />
 					</Link>
 				</div>
 			</div>
@@ -86,7 +92,12 @@ const Nav = () => {
 						<ProfileModal setIsProfileModalOpen={setIsProfileModalOpen} />
 					)}
 				</div>
-				{isSidebarOpen && <Sidebar />}
+				{isSidebarOpen && (
+					<Sidebar
+						outSide={outSide}
+						sidebarOutSideClick={sidebarOutSideClick}
+					/>
+				)}
 			</div>
 		</nav>
 	);

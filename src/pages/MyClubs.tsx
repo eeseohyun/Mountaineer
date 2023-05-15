@@ -3,6 +3,7 @@ import { useState, useContext, useEffect } from "react";
 import { db } from "../firebase.config";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { Link } from "react-router-dom";
+import Empty from "../components/Empty";
 
 export default function MyClubs() {
 	const { currentUser } = useContext(AuthContext);
@@ -35,7 +36,7 @@ export default function MyClubs() {
 						참여한 산악회
 					</h1>
 					<div className="grid grid-cols-1 gap-8 mt-8 md:mt-16 md:grid-cols-2">
-						{userMountains &&
+						{userMountains.length !== 0 ? (
 							userMountains.map((mountain) => (
 								<div key={mountain.id} className="lg:flex">
 									<img
@@ -55,7 +56,10 @@ export default function MyClubs() {
 										</span>
 									</div>
 								</div>
-							))}
+							))
+						) : (
+							<Empty />
+						)}
 					</div>
 				</div>
 			</section>
