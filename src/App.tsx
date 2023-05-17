@@ -35,7 +35,7 @@ const App = () => {
 				<Route path="/club/:postId" element={<Detail />} />
 				<Route path="/mypage/myposts" element={<MyPosts />} />
 				<Route path="/mypage/myclubs" element={<MyClubs />} />
-				<Route path="/board/freeboard" element={<FreeBoard />} />
+				<Route path="/freeboard" element={<FreeBoard />} />
 				<Route path="/club/:postId/edit" element={<Edit />} />
 				<Route path="/info" element={<InfoPage />} />
 			</Routes>
