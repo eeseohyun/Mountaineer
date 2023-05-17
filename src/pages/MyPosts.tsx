@@ -6,9 +6,17 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 import { CiFileOff } from "react-icons/ci";
 import Empty from "../components/Empty";
 
+interface Post {
+	id: string;
+	img?: string;
+	title: string;
+	createdDate: {
+		toDate: () => Date;
+	};
+}
 export default function MyPosts() {
 	const { currentUser } = useContext(AuthContext);
-	const [userPosts, setUserPosts] = useState([]);
+	const [userPosts, setUserPosts] = useState<Post[]>([]);
 
 	useEffect(() => {
 		if (currentUser) {
@@ -18,10 +26,10 @@ export default function MyPosts() {
 				querySnapshot = await getDocs(
 					query(board, where("userId", "==", currentUser.uid))
 				);
-				const posts = querySnapshot.docs.map((doc) => ({
-					id: doc.id,
-					...doc.data(),
-				}));
+				const posts = querySnapshot.docs.map((doc) => {
+					const data = doc.data() as DocumentData;
+					return { id: doc.id, ...doc.data() } as Post;
+				});
 				setUserPosts(posts);
 			};
 			fetchPosts();
@@ -38,11 +46,20 @@ export default function MyPosts() {
 						{userPosts.length !== 0 ? (
 							userPosts.map((post) => (
 								<div key={post.id} className="lg:flex">
-									<img
-										className="object-cover w-full h-56 rounded-lg lg:w-64"
-										src={post.img}
-										alt=""
-									/>
+									{post.img ? (
+										<img
+											className="object-cover w-full h-56 rounded-lg lg:w-64"
+											src={post.img}
+											alt=""
+										/>
+									) : (
+										<img
+											className="object-cover w-full h-56 rounded-lg lg:w-64"
+											src="https://baticrom.com/public/medies/noimage.jpg"
+											alt="noImg"
+										/>
+									)}
+
 									<div className="flex flex-col justify-between py-5 lg:mx-6 ml-1">
 										<Link
 											to={`/club/${post.id}`}

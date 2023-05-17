@@ -17,18 +17,42 @@ import { AuthContext } from "../components/AuthContext";
 import { Link } from "react-router-dom";
 import Pagination from "../components/Pagination";
 
-export default function ClubPage() {
-	const [img, setImg] = useState("");
-	const [posts, setPosts] = useState([]);
-	const [participationBtn, setParticipationBtn] = useState(0);
-	const [category, setCategory] = useState("전체");
-	const [loading, setLoading] = useState(true);
+interface Category {
+	label: string;
+	hoverColor: string;
+}
+
+interface PostData {
+	title: string;
+	schedule: string;
+	category: string;
+	participantsNum: number;
+	img: string;
+	idx: string;
+	isParticipationed: string[] | undefined;
+}
+export default function ClubPage(): JSX.Element {
+	const [img, setImg] = useState<string>("");
+	const [posts, setPosts] = useState<PostData[]>([]);
+	const [participationBtn, setParticipationBtn] = useState<number>(0);
+	const [category, setCategory] = useState<string>("전체");
+	const [loading, setLoading] = useState<boolean>(true);
 	//pagination
-	const [limit, setLimit] = useState(5);
-	const [page, setPage] = useState(1);
-	const offset = (page - 1) * limit;
+	const [limit, setLimit] = useState<number>(5);
+	const [page, setPage] = useState<number>(1);
+	const offset: number = (page - 1) * limit;
 	const { currentUser } = useContext(AuthContext);
 
+	const categories: Category[] = [
+		{ label: "전체", hoverColor: "gray-800" },
+		{ label: "서울", hoverColor: "rose-500" },
+		{ label: "경기", hoverColor: "orange-400" },
+		{ label: "강원", hoverColor: "amber-400" },
+		{ label: "충청", hoverColor: "emerald-400" },
+		{ label: "전라", hoverColor: "sky-400" },
+		{ label: "경상", hoverColor: "blue-500" },
+		{ label: "제주", hoverColor: "purple-400" },
+	];
 	useEffect(() => {
 		const fetchPost = async () => {
 			const board = collection(db, "club");
@@ -76,13 +100,13 @@ export default function ClubPage() {
 		fetchPost();
 		fetchImg();
 		setLoading(false);
-	}, [category, participationBtn]);
+	}, [category, participationBtn, currentUser]);
 
 	//참여하기 버튼 함수
-	const handleClick = async (idx) => {
+	const handleClick = async (idx: string) => {
 		const clubRef = doc(db, "club", idx);
 		const clubDoc = await getDoc(clubRef);
-		const participants = clubDoc.data().isParticipationed || [];
+		const participants = clubDoc.data()?.isParticipationed || [];
 
 		if (
 			currentUser &&
@@ -100,54 +124,15 @@ export default function ClubPage() {
 		<div className="py-5 w-full min-h-screen">
 			<div className="flex justify-around items-center mb-3">
 				<div className="flex justify-center">
-					<p
-						className="cursor-pointer mr-5 text-lg font-medium text-gray-500 hover:text-gray-800"
-						onClick={() => setCategory("전체")}
-					>
-						전체
-					</p>
-					<p
-						className="cursor-pointer text-lg mr-5 font-medium text-gray-500 hover:text-rose-500"
-						onClick={() => setCategory("서울")}
-					>
-						서울
-					</p>
-					<p
-						className="cursor-pointer text-lg mr-5 font-medium text-gray-500 hover:text-orange-400"
-						onClick={() => setCategory("경기")}
-					>
-						경기
-					</p>
-					<p
-						className="cursor-pointer text-lg mr-5 font-medium text-gray-500 hover:text-amber-400"
-						onClick={() => setCategory("강원")}
-					>
-						강원
-					</p>
-					<p
-						className="cursor-pointer text-lg mr-5 font-medium text-gray-500 hover:text-emerald-400"
-						onClick={() => setCategory("충청")}
-					>
-						충청
-					</p>
-					<p
-						className="cursor-pointer text-lg mr-5 font-medium text-gray-500 hover:text-sky-400"
-						onClick={() => setCategory("전라")}
-					>
-						전라
-					</p>
-					<p
-						className="cursor-pointer text-lg mr-5 font-medium text-gray-500 hover:text-blue-500"
-						onClick={() => setCategory("경상")}
-					>
-						경상
-					</p>
-					<p
-						className="cursor-pointer text-lg mr-5 font-medium text-gray-500 hover:text-purple-400"
-						onClick={() => setCategory("제주")}
-					>
-						제주
-					</p>
+					{categories.map((category) => (
+						<p
+							key={category.label}
+							className={`cursor-pointer mr-5 text-lg font-medium text-gray-500 hover:text-${category.hoverColor}`}
+							onClick={() => setCategory(category.label)}
+						>
+							{category.label}
+						</p>
+					))}
 				</div>
 				<Link to="/post">
 					<button className="flex text-sm items-center p-2 w-1/10 border border-gray-400 text-gray-500 rounded-none outline-none hover:rounded-lg duration-200">
@@ -169,7 +154,14 @@ export default function ClubPage() {
 						>
 							<div className="sm:w-full lg:m-7 lg:mb-0 mb-3 bg-white p-5 shadow rounded hover:bg-neutral-100">
 								<div className="flex items-center  border-gray-200 pb-3">
-									{post.img && <img src={post.img} className="h-32 w-44" />}
+									{post.img ? (
+										<img src={post.img} className="h-32 w-44" />
+									) : (
+										<img
+											className="h-32 w-44"
+											src="https://baticrom.com/public/medies/noimage.jpg"
+										/>
+									)}
 									<div className="flex items-start justify-between w-full">
 										<div className="w-1/2 flex flex-col ml-5">
 											<Link to={currentUser ? `/club/${post.idx}` : "/login"}>

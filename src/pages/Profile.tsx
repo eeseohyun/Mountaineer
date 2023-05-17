@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import { AuthContext } from "../components/AuthContext";
 import { updateProfile } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
@@ -6,14 +6,14 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { addDoc, collection } from "firebase/firestore";
 import { storage, db } from "../firebase.config";
 
-const Profile = () => {
+export default function Profile() {
 	const { currentUser } = useContext(AuthContext);
-	const [newNickname, setNewNickname] = useState("");
-	const [newPhotoURL, setNewPhotoURL] = useState("");
-	const [newPhotoFile, setNewPhotoFile] = useState(null);
+	const [newNickname, setNewNickname] = useState<string>("");
+	const [newPhotoURL, setNewPhotoURL] = useState<string>("");
+	const [newPhotoFile, setNewPhotoFile] = useState<File | null>(null);
 	const navigate = useNavigate();
 
-	const handleUpdate = async (e) => {
+	const handleUpdate = async (e: FormEvent) => {
 		e.preventDefault();
 		const newUserInfo = {
 			displayName: newNickname || currentUser.displayName,
@@ -114,6 +114,4 @@ const Profile = () => {
 			</div>
 		</div>
 	);
-};
-
-export default Profile;
+}

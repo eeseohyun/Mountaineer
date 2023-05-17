@@ -5,9 +5,15 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { Link } from "react-router-dom";
 import Empty from "../components/Empty";
 
+interface Mountain {
+	id: string;
+	img?: string;
+	title: string;
+	schedule: string;
+}
 export default function MyClubs() {
 	const { currentUser } = useContext(AuthContext);
-	const [userMountains, setUserMountains] = useState([]);
+	const [userMountains, setUserMountains] = useState<Mountain[]>([]);
 	useEffect(() => {
 		if (currentUser) {
 			const fetchPosts = async () => {
@@ -22,7 +28,7 @@ export default function MyClubs() {
 				const mountains = querySnapshot.docs.map((doc) => ({
 					id: doc.id,
 					...doc.data(),
-				}));
+				})) as Mountain[];
 				setUserMountains(mountains);
 			};
 			fetchPosts();
@@ -39,11 +45,20 @@ export default function MyClubs() {
 						{userMountains.length !== 0 ? (
 							userMountains.map((mountain) => (
 								<div key={mountain.id} className="lg:flex">
-									<img
-										className="object-cover w-full h-56 rounded-lg lg:w-64"
-										src={mountain.img}
-										alt=""
-									/>
+									{mountain.img ? (
+										<img
+											className="object-cover w-full h-56 rounded-lg lg:w-64"
+											src={mountain.img}
+											alt=""
+										/>
+									) : (
+										<img
+											className="object-cover w-full h-56 rounded-lg lg:w-64"
+											src="https://baticrom.com/public/medies/noimage.jpg"
+											alt="noImg"
+										/>
+									)}
+
 									<div className="flex flex-col justify-between py-5 lg:mx-6 ml-1">
 										<Link
 											to={`/club/${mountain.id}`}

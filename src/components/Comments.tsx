@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, ChangeEvent, FormEvent } from "react";
 import { BsPencil, BsTrash } from "react-icons/bs";
 import { useParams } from "react-router-dom";
 import { doc, addDoc, Timestamp, query, orderBy } from "firebase/firestore";
@@ -7,13 +7,22 @@ import { getDocs, collection, updateDoc, deleteDoc } from "firebase/firestore";
 import { AuthContext } from "./AuthContext";
 import EditBtn from "./EditBtn";
 
+interface Comment {
+	id: string;
+	text: string;
+	postId: string;
+	userId: string;
+	userNickname: string;
+	userProfile: string;
+	timestamp: Timestamp;
+}
 export default function Comments() {
-	const [comments, setComments] = useState([]);
+	const [comments, setComments] = useState<Comment[]>([]);
 	const [commentText, setCommentText] = useState("");
 	const [editText, setEditText] = useState("");
 	const { currentUser } = useContext(AuthContext);
-	const { postId } = useParams();
-	const [editCommentId, setEditCommentId] = useState(null);
+	const { postId } = useParams<{ postId: string }>();
+	const [editCommentId, setEditCommentId] = useState<string | null>(null);
 
 	useEffect(() => {
 		const fetchComments = async () => {
@@ -26,16 +35,16 @@ export default function Comments() {
 					return {
 						id: doc.id,
 						...doc.data(),
-					};
+					} as Comment;
 				})
 			);
 		};
 		fetchComments();
 	}, [postId]);
 	//댓글 달기 함수
-	const handleSubmit = async (e) => {
+	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
-		const newComment = {
+		const newComment: Comment = {
 			text: commentText,
 			postId,
 			userId: currentUser.uid,
@@ -54,8 +63,8 @@ export default function Comments() {
 	};
 
 	//댓글 삭제 함수
-	const handleDelete = async (id) => {
-		if (confirm("삭제하시겠습니까?") == true) {
+	const handleDelete = async (id: string) => {
+		if (window.confirm("삭제하시겠습니까?") == true) {
 			const postRef = doc(db, "club", postId);
 			const commentsRef = collection(postRef, "comments");
 			await deleteDoc(doc(commentsRef, id)).then(() =>
@@ -69,7 +78,7 @@ export default function Comments() {
 	};
 
 	//댓글 수정 함수
-	const handleUpdate = async (id) => {
+	const handleUpdate = async (id: string) => {
 		const postRef = doc(db, "club", postId);
 		const commentsRef = collection(postRef, "comments");
 		const commentRef = doc(commentsRef, id);

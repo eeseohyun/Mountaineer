@@ -1,4 +1,16 @@
-export default function Pagination({ total, limit, page, setPage }) {
+interface PaginationProps {
+	total: number;
+	limit: number;
+	page: number;
+	setPage: (page: number) => void;
+}
+
+export default function Pagination({
+	total,
+	limit,
+	page,
+	setPage,
+}: PaginationProps) {
 	const numPages = Math.ceil(total / limit);
 	return (
 		<div className="inline-flex -space-x-px">
@@ -11,14 +23,16 @@ export default function Pagination({ total, limit, page, setPage }) {
 			</button>
 
 			{Array(numPages)
-				.fill()
+				.fill(null)
 				.map((_, i) => {
 					return (
 						<button
-							className="bg-white border border-gray-300 text-gray-500 hover:bg-gray-100 hover:text-gray-700 leading-tight py-2 px-3 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+							className={`bg-white border border-gray-300 text-gray-500 hover:bg-gray-100 hover:text-gray-700 leading-tight py-2 px-3 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ${
+								page === i + 1 ? "font-semibold" : ""
+							}`}
 							key={i + 1}
 							onClick={() => setPage(i + 1)}
-							aria-current={page === i + 1 ? "page" : null}
+							aria-current={page === i + 1 ? "page" : undefined}
 						>
 							{i + 1}
 						</button>

@@ -1,7 +1,7 @@
 import { addDoc, Timestamp, collection, doc, getDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { db, storage } from "../firebase.config";
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, FormEvent } from "react";
 import { AuthContext } from "../components/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -16,6 +16,18 @@ const categories = [
 	"경상",
 	"제주",
 ];
+interface PostData {
+	createdDate: Timestamp;
+	title: string;
+	participantsNum: number;
+	schedule: string;
+	context: string;
+	category: string;
+	profileImg: string;
+	userNickname: string;
+	userId: string;
+	img?: string;
+}
 export default function Post() {
 	const { currentUser } = useContext(AuthContext);
 	const [category, setCategory] = useState("전체");
@@ -23,7 +35,7 @@ export default function Post() {
 	const [participantsNum, setParticipantsNum] = useState(0);
 	const [schedule, setSchedule] = useState("");
 	const [context, setContext] = useState("");
-	const [imgUpload, setImgUpload] = useState(null);
+	const [imgUpload, setImgUpload] = useState<File | null>(null);
 	const navigate = useNavigate();
 
 	const postData = {
@@ -33,11 +45,11 @@ export default function Post() {
 		schedule: schedule,
 		context: context,
 		category: category,
-		profileImg: currentUser.photoURL,
-		userNickname: currentUser.displayName,
-		userId: currentUser.uid,
+		profileImg: currentUser.photoURL || "",
+		userNickname: currentUser.displayName || "",
+		userId: currentUser.uid || "",
 	};
-	const handlePost = async (e) => {
+	const handlePost = async (e: FormEvent) => {
 		e.preventDefault();
 		try {
 			if (imgUpload) {

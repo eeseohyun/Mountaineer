@@ -2,7 +2,19 @@ import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../components/AuthContext";
 
-export default function currentPosts({ currentPosts }) {
+interface Post {
+	id: string;
+	img: string | null;
+	title: string;
+	createdDate: Date;
+	profileImg: string;
+	userNickname: string;
+}
+
+interface Props {
+	currentPosts: Post[];
+}
+export default function currentPosts({ currentPosts }: Props) {
 	const { currentUser } = useContext(AuthContext);
 	return (
 		<section className="bg-white dark:bg-gray-900">
@@ -17,11 +29,20 @@ export default function currentPosts({ currentPosts }) {
 					{currentPosts &&
 						currentPosts.map((post) => (
 							<div key={post.id} className="lg:flex shadow-lg p-2">
-								<img
-									className="object-cover w-full h-56 rounded-lg lg:w-64"
-									src={post.img}
-									alt="mountain"
-								/>
+								{post.img ? (
+									<img
+										className="object-cover w-full h-56 rounded-lg lg:w-64"
+										src={post.img}
+										alt="mountain"
+									/>
+								) : (
+									<img
+										className="object-cover w-full h-56 rounded-lg lg:w-64"
+										src="https://baticrom.com/public/medies/noimage.jpg"
+										alt="noImg"
+									/>
+								)}
+
 								<div className="flex flex-col justify-between py-4 lg:mx-6 ml-3">
 									<Link
 										to={currentUser ? `/club/${post.id}` : "/login"}

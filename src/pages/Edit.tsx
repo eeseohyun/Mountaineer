@@ -1,10 +1,10 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, FormEvent } from "react";
 import { AuthContext } from "../components/AuthContext";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { doc, getDoc, updateDoc, Timestamp } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db, storage } from "../firebase.config";
-const categories = [
+const categories: string[] = [
 	"전체",
 	"서울",
 	"경기",
@@ -14,16 +14,28 @@ const categories = [
 	"경상",
 	"제주",
 ];
+
+interface EditData {
+	createdDate: Timestamp;
+	title: string;
+	participantsNum: number;
+	schedule: string;
+	context: string;
+	category: string;
+	profileImg: string;
+	userNickname: string;
+	userId: string;
+}
 export default function Edit() {
 	const { currentUser } = useContext(AuthContext);
 	const [editCategory, setEditCategory] = useState("");
 	const [editTitle, setEditTitle] = useState("");
 	const [editContext, setEditContext] = useState("");
-	const [preDetail, setPreDetail] = useState({});
+	const [preDetail, setPreDetail] = useState<EditData | null>(null);
 	const [editParticipantsNum, setEditParticipantsNum] = useState(0);
 	const [editSchedule, setEditSchedule] = useState("");
-	const [editImgUpload, setEditImgUpload] = useState(null);
-	const { postId } = useParams();
+	const [editImgUpload, setEditImgUpload] = useState<File | null>(null);
+	const { postId } = useParams<{ postId: string }>();
 	const navigate = useNavigate();
 
 	const editData = {
@@ -43,7 +55,7 @@ export default function Edit() {
 				const docRef = doc(db, "club", postId);
 				const docSnapshot = await getDoc(docRef);
 				if (docSnapshot.exists()) {
-					const preData = docSnapshot.data();
+					const preData = docSnapshot.data() as EditData;
 					setPreDetail(preData);
 					setEditCategory(preData.category);
 					setEditTitle(preData.title);
@@ -58,7 +70,7 @@ export default function Edit() {
 		fetchPreDetail();
 	}, [postId]);
 
-	const handleUpdate = async (e) => {
+	const handleUpdate = async (e: FormEvent) => {
 		e.preventDefault();
 		try {
 			if (editImgUpload) {

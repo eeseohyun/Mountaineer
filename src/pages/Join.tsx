@@ -1,6 +1,6 @@
 import { auth, db } from "../firebase.config";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { useContext, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import { AuthContext } from "../components/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { collection, getDocs, query, where } from "firebase/firestore";
@@ -16,7 +16,7 @@ export default function Join() {
 	const navigate = useNavigate();
 
 	//닉네임 중복 검사
-	const checkNicknameDuplicate = async (nickname) => {
+	const checkNicknameDuplicate = async (nickname: string) => {
 		try {
 			const q = query(
 				collection(db, "users"),
@@ -29,7 +29,7 @@ export default function Join() {
 			return false;
 		}
 	};
-	const handleJoin = async (e) => {
+	const handleJoin = async (e: FormEvent) => {
 		e.preventDefault();
 		if (password !== confirmedPassword) {
 			setErrorMsg("비밀번호가 일치하지 않습니다.");

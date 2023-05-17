@@ -2,7 +2,17 @@ import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../components/AuthContext";
 
-export default function PopularPosts({ popularPosts }) {
+interface PopularPostsProps {
+	popularPost: Post[];
+}
+interface Post {
+	id: number;
+	img: string;
+	title: string;
+	createdDate: Date;
+}
+
+export default function PopularPosts({ popularPosts }: PopularPostsProps) {
 	const { currentUser } = useContext(AuthContext);
 	return (
 		<section className="bg-white dark:bg-gray-900">

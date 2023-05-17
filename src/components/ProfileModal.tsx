@@ -9,10 +9,22 @@ import { db } from "../firebase.config";
 import Logout from "./Logout";
 import { unsubscribe } from "diagnostics_channel";
 
-export default function ProfileModal({ setIsProfileModalOpen }) {
+interface Post {
+	id: string;
+	//추가
+}
+interface Mountain {
+	id: string;
+	//추가
+}
+export default function ProfileModal({
+	setIsProfileModalOpen,
+}: {
+	setIsProfileModalOpen: (isOpen: boolean) => void;
+}) {
 	const { currentUser } = useContext(AuthContext);
-	const [userPosts, setUserPosts] = useState([]);
-	const [userMountains, setUserMountains] = useState([]);
+	const [userPosts, setUserPosts] = useState<Post[]>([]);
+	const [userMountains, setUserMountains] = useState<Mountain[]>([]);
 
 	useEffect(() => {
 		if (currentUser) {
@@ -22,7 +34,7 @@ export default function ProfileModal({ setIsProfileModalOpen }) {
 				querySnapshot = await getDocs(
 					query(board, where("userId", "==", currentUser.uid))
 				);
-				const posts = querySnapshot.docs.map((doc) => ({
+				const posts: Post[] = querySnapshot.docs.map((doc) => ({
 					id: doc.id,
 					...doc.data(),
 				}));
@@ -43,7 +55,7 @@ export default function ProfileModal({ setIsProfileModalOpen }) {
 						where("isParticipationed", "array-contains", currentUser.uid)
 					)
 				);
-				const mountains = querySnapshot.docs.map((doc) => ({
+				const mountains: Mountain[] = querySnapshot.docs.map((doc) => ({
 					id: doc.id,
 					...doc.data(),
 				}));

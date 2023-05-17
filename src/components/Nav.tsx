@@ -1,14 +1,12 @@
-import { useContext, useState, useRef } from "react";
-import { AiOutlineSearch } from "react-icons/ai";
+import { useContext, useState, useRef, FormEvent } from "react";
 import { FaBars } from "react-icons/fa";
-import { TbMountain } from "react-icons/tb";
 import { Link } from "react-router-dom";
 import { AuthContext } from "./AuthContext";
 import Sidebar from "./Sidebar";
 import ProfileModal from "./ProfileModal";
 import { useNavigate } from "react-router-dom";
 
-const Nav = () => {
+export default function Nav() {
 	const { currentUser } = useContext(AuthContext);
 	const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -16,14 +14,14 @@ const Nav = () => {
 	const navigate = useNavigate();
 	const outSide = useRef();
 
-	const handleSearchSubmit = (e) => {
+	const handleSearchSubmit = (e: FormEvent) => {
 		e.preventDefault();
 		navigate(`/search?keyword=${searchInput}`);
 		setSearchInput("");
 		console.log(`Search submitted: ${searchInput}`);
 	};
 
-	const sidebarOutSideClick = (e) => {
+	const sidebarOutSideClick = (e: React.MouseEvent<HTMLElement>) => {
 		if (isSidebarOpen && outSide.current === e.target) {
 			setIsSidebarOpen(false);
 		}
@@ -102,6 +100,4 @@ const Nav = () => {
 			</div>
 		</nav>
 	);
-};
-
-export default Nav;
+}

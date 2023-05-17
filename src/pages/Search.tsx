@@ -5,9 +5,15 @@ import { Link } from "react-router-dom";
 import { db } from "../firebase.config";
 import { AuthContext } from "../components/AuthContext";
 
+interface PostData {
+	id: string;
+	title: string;
+	userNickname: string;
+	profileImg: string;
+}
 export default function Search() {
 	const [searchParams] = useSearchParams();
-	const [postResults, setPostResults] = useState([]);
+	const [postResults, setPostResults] = useState<PostData[]>([]);
 	const { currentUser } = useContext(AuthContext);
 	const searchParam = new URLSearchParams(searchParams);
 	const searchTerm = searchParam.get("keyword");
@@ -35,7 +41,7 @@ export default function Search() {
 				return mergedResults.find((doc) => doc.id === id);
 			});
 			setPostResults(
-				uniqueResults.map((doc) => ({ id: doc.id, ...doc.data() }))
+				uniqueResults.map((doc) => ({ id: doc.id, ...doc.data() } as PostData))
 			);
 		};
 		if (searchParam) {

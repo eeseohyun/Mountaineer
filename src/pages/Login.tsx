@@ -1,6 +1,6 @@
 import { auth, db } from "../firebase.config";
 import { doc, setDoc } from "firebase/firestore";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import {
 	signInWithEmailAndPassword,
 	GoogleAuthProvider,
@@ -14,7 +14,7 @@ export default function Login() {
 	const [errMsg, setErrMsg] = useState("");
 	const navigate = useNavigate();
 	//login
-	const handleLogin = async (e) => {
+	const handleLogin = async (e: FormEvent) => {
 		e.preventDefault();
 		try {
 			await signInWithEmailAndPassword(auth, loginEmail, loginPassword);

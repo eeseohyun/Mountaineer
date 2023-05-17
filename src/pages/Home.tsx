@@ -13,9 +13,22 @@ import {
 } from "firebase/firestore";
 import PopularPosts from "../components/PopularPosts";
 
+interface PostData {
+	id: string;
+	category: string;
+	context: string;
+	createdDate: Date;
+	img: string;
+	participantsNum: number;
+	profileImg: number;
+	schedule: string;
+	title: string;
+	userId: string;
+	userNickname: string;
+}
 export default function Home() {
-	const [currentPosts, setCurrentPosts] = useState([]);
-	const [popoularPosts, setPopularPosts] = useState([]);
+	const [currentPosts, setCurrentPosts] = useState<PostData[]>([]);
+	const [popoularPosts, setPopularPosts] = useState<PostData[]>([]);
 	const { currentUser } = useContext(AuthContext);
 	useEffect(() => {
 		const fetchCurrentPosts = async () => {
@@ -27,7 +40,7 @@ export default function Home() {
 			const posts = querySnapshot.docs.map((doc) => ({
 				id: doc.id,
 				...doc.data(),
-			}));
+			})) as PostData[];
 			setCurrentPosts(posts);
 		};
 		fetchCurrentPosts();
@@ -52,7 +65,7 @@ export default function Home() {
 			const posts = querySnapshot.docs.map((doc) => ({
 				id: doc.id,
 				...doc.data(),
-			}));
+			})) as PostData[];
 			setPopularPosts(posts);
 			console.log(popoularPosts);
 		};

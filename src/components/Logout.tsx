@@ -8,7 +8,7 @@ import { FiLogOut } from "react-icons/fi";
 export default function Logout() {
 	const { currentUser } = useContext(AuthContext);
 	const navigate = useNavigate();
-	const handleLogout = async (event) => {
+	const handleLogout = async (event: React.MouseEvent<HTMLButtonElement>) => {
 		event.preventDefault();
 
 		try {

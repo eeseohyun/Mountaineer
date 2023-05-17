@@ -6,9 +6,21 @@ import { useParams, useNavigate } from "react-router-dom";
 import Comments from "../components/Comments";
 import { BsPencil, BsTrash } from "react-icons/bs";
 
+interface DetailData {
+	title: string;
+	img: string;
+	profileImg: string;
+	userNickname: string;
+	userId: string;
+	schedule: string;
+	context: string;
+	category: string;
+	isParticipationed: string[];
+	participantsNum: number;
+}
 export default function Detail() {
-	const { postId } = useParams();
-	const [detail, setDetail] = useState([]);
+	const { postId } = useParams<{ postId: string }>();
+	const [detail, setDetail] = useState<DetailData | null>(null);
 	const { currentUser } = useContext(AuthContext);
 	const navigate = useNavigate();
 
@@ -17,14 +29,14 @@ export default function Detail() {
 			const docRef = doc(db, "club", postId);
 			const docSnapshot = await getDoc(docRef);
 			if (docSnapshot.exists()) {
-				setDetail(docSnapshot.data());
+				setDetail(docSnapshot.data() as DetailData);
 			}
 		};
 		fetchDetail();
 	}, [postId]);
 
 	const handleDelete = async (id) => {
-		if (confirm("삭제하시겠습니까?") == true) {
+		if (window.confirm("삭제하시겠습니까?") == true) {
 			const postRef = doc(db, "club", postId);
 			await deleteDoc(postRef).then(() => alert("삭제가 완료되었습니다."));
 		}
