@@ -158,7 +158,7 @@ export default function ClubPage() {
 			</div>
 			{loading ? (
 				<div className="flex justify-center items-center h-screen">
-					<ClipLoader color="#FCA5A5" size={150} />
+					<ClipLoader color="#FCA5A5" size={100} />
 				</div>
 			) : (
 				<>
@@ -169,7 +169,7 @@ export default function ClubPage() {
 						>
 							<div className="sm:w-full lg:m-7 lg:mb-0 mb-3 bg-white p-5 shadow rounded hover:bg-neutral-100">
 								<div className="flex items-center  border-gray-200 pb-3">
-									<img src={post.img} className="h-32 w-44" />
+									{post.img && <img src={post.img} className="h-32 w-44" />}
 									<div className="flex items-start justify-between w-full">
 										<div className="w-1/2 flex flex-col ml-5">
 											<Link to={currentUser ? `/club/${post.idx}` : "/login"}>

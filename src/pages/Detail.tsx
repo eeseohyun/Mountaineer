@@ -27,19 +27,19 @@ export default function Detail() {
 		if (confirm("삭제하시겠습니까?") == true) {
 			const postRef = doc(db, "club", postId);
 			await deleteDoc(postRef).then(() => alert("삭제가 완료되었습니다."));
-		} else {
-			return;
 		}
-		navigate("/club");
-		setDetail(detail.filter((post) => postId !== id));
+		navigate(`/club/${postId}`);
 	};
 
 	return (
 		<>
-			{detail ? (
+			{detail !== null ? (
 				<div className="p-10 justify-center">
 					<div className="min-w-2/3 rounded overflow-hidden shadow-lg ">
-						<img className="w-full" src={detail.img} alt="Mountain" />
+						{detail.img && (
+							<img className="w-full" src={detail.img} alt="Mountain" />
+						)}
+
 						<div className="px-6 py-4">
 							<div className="font-bold text-2xl mb-3 ">{detail.title}</div>
 							<div className="flex border-b-2 pb-3">
@@ -52,9 +52,11 @@ export default function Detail() {
 										{detail.userNickname}
 									</p>
 									<div className="flex ml-10">
-										{currentUser.uid === detail.userId && (
+										{currentUser && currentUser.uid === detail.userId && (
 											<>
-												<button>
+												<button
+													onClick={() => navigate(`/club/${postId}/edit`)}
+												>
 													<BsPencil className="text-gray-500 hover:text-black" />
 												</button>
 												<span className="ml-1 mr-1 text-gray-500">|</span>
@@ -71,7 +73,9 @@ export default function Detail() {
 								<p className="text-gray-700 font-semibold">
 									🗓️ 일정 : {detail.schedule}
 								</p>
-								<p className="text-gray-700 text-base">{detail.context}</p>
+								<p className="text-gray-700 text-base whitespace-pre-wrap">
+									{detail.context}
+								</p>
 							</div>
 						</div>
 						<div className="px-6 pt-4 pb-3">
@@ -89,9 +93,8 @@ export default function Detail() {
 					</div>
 				</div>
 			) : (
-				<div>Loading...</div>
+				<div className="font-bold">Loading...</div>
 			)}
 		</>
 	);
 }
-//<div className="flex mx-auto items-center justify-center shadow-lg mt-56 mb-4 max-w-lg">

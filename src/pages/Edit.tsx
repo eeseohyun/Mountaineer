@@ -1,11 +1,9 @@
-import { addDoc, Timestamp, collection, doc, getDoc } from "firebase/firestore";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { db, storage } from "../firebase.config";
-import { useState, useContext, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../components/AuthContext";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
-
+import { Link, useParams, useNavigate } from "react-router-dom";
+import { doc, getDoc, updateDoc, Timestamp } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { db, storage } from "../firebase.config";
 const categories = [
 	"전체",
 	"서울",
@@ -16,54 +14,77 @@ const categories = [
 	"경상",
 	"제주",
 ];
-export default function Post() {
+export default function Edit() {
 	const { currentUser } = useContext(AuthContext);
-	const [category, setCategory] = useState("전체");
-	const [title, setTitle] = useState("");
-	const [participantsNum, setParticipantsNum] = useState(0);
-	const [schedule, setSchedule] = useState("");
-	const [context, setContext] = useState("");
-	const [imgUpload, setImgUpload] = useState(null);
+	const [editCategory, setEditCategory] = useState("");
+	const [editTitle, setEditTitle] = useState("");
+	const [editContext, setEditContext] = useState("");
+	const [preDetail, setPreDetail] = useState({});
+	const [editParticipantsNum, setEditParticipantsNum] = useState(0);
+	const [editSchedule, setEditSchedule] = useState("");
+	const [editImgUpload, setEditImgUpload] = useState(null);
+	const { postId } = useParams();
 	const navigate = useNavigate();
 
-	const postData = {
+	const editData = {
 		createdDate: Timestamp.fromDate(new Date()),
-		title: title,
-		participantsNum: participantsNum,
-		schedule: schedule,
-		context: context,
-		category: category,
-		profileImg: currentUser.photoURL,
-		userNickname: currentUser.displayName,
-		userId: currentUser.uid,
+		title: editTitle,
+		participantsNum: editParticipantsNum,
+		schedule: editSchedule,
+		context: editContext,
+		category: editCategory,
+		profileImg: currentUser?.photoURL,
+		userNickname: currentUser?.displayName,
+		userId: currentUser?.uid,
 	};
-	const handlePost = async (e) => {
+	useEffect(() => {
+		const fetchPreDetail = async () => {
+			try {
+				const docRef = doc(db, "club", postId);
+				const docSnapshot = await getDoc(docRef);
+				if (docSnapshot.exists()) {
+					const preData = docSnapshot.data();
+					setPreDetail(preData);
+					setEditCategory(preData.category);
+					setEditTitle(preData.title);
+					setEditParticipantsNum(preData.participantsNum);
+					setEditSchedule(preData.schedule);
+					setEditContext(preData.context);
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		};
+		fetchPreDetail();
+	}, [postId]);
+
+	const handleUpdate = async (e) => {
 		e.preventDefault();
 		try {
-			if (imgUpload) {
+			if (editImgUpload) {
 				// 이미지를 storage에 업로드
 				const imageRef = ref(
 					storage,
 					`${currentUser.uid}/${new Date().getTime()}`
 				);
-				await uploadBytes(imageRef, imgUpload);
+				await uploadBytes(imageRef, editImgUpload);
 
 				//업로드된 이미지의 URl을 가져와 Firestore에 저장
 				const imgUrl = await getDownloadURL(imageRef);
-				const userRef = await addDoc(collection(db, "club"), {
-					...postData,
+				const userRef = await updateDoc(doc(db, "club", postId), {
+					...editData,
 					img: imgUrl,
 				});
 
-				alert("게시물을 업로드하였습니다!");
-				navigate("/club");
+				alert("게시물을 수정하였습니다!");
+				navigate(`/club/${postId}`);
 				console.log(userRef);
 			} else {
-				await addDoc(collection(db, "club"), {
-					...postData,
+				await updateDoc(doc(db, "club", postId), {
+					...editData,
 				});
-				alert("게시물을 업로드하였습니다!");
-				navigate("/club");
+				alert("게시물을 수정하였습니다!");
+				navigate(`/club/${postId}`);
 			}
 		} catch (error) {
 			console.log(error);
@@ -73,12 +94,13 @@ export default function Post() {
 	return (
 		<div className="bg-stone-50 min-h-screen md:px-20 pt-6">
 			<div className=" bg-white rounded-md px-6 py-10 max-w-3xl mx-auto">
-				<form className="space-y-4" onSubmit={handlePost}>
+				<form className="space-y-4">
 					<div className="space-x-2">
 						<label>카테고리</label>
 						<select
+							value={editCategory}
 							onChange={(e) => {
-								setCategory(e.target.value);
+								setEditCategory(e.target.value);
 							}}
 							id="region"
 							name="region"
@@ -93,20 +115,21 @@ export default function Post() {
 					<div className="space-x-2">
 						<label>제목</label>
 						<input
+							value={editTitle}
 							onChange={(e) => {
-								setTitle(e.target.value);
+								setEditTitle(e.target.value);
 							}}
 							type="text"
 							className="title w-2/3 outline-none py-1 px-2 text-sm border-2 rounded-md"
-							placeholder="산행지를 입력해주세요."
 							required
 						/>
 					</div>
 					<div className="space-x-2">
 						<label>참가인원</label>
 						<input
+							value={editParticipantsNum}
 							onChange={(e) => {
-								setParticipantsNum(Number(e.target.value));
+								setEditParticipantsNum(Number(e.target.value));
 							}}
 							type="number"
 							className="participantsNum"
@@ -116,8 +139,9 @@ export default function Post() {
 					<div className="space-x-2">
 						<label>일정</label>
 						<input
+							value={editSchedule}
 							onChange={(e) => {
-								setSchedule(e.target.value);
+								setEditSchedule(e.target.value);
 							}}
 							type="date"
 							className="schedule"
@@ -127,8 +151,9 @@ export default function Post() {
 					<div>
 						<label className="block mb-2">내용</label>
 						<textarea
+							value={editContext}
 							onChange={(e) => {
-								setContext(e.target.value);
+								setEditContext(e.target.value);
 							}}
 							required
 							rows="20"
@@ -140,20 +165,23 @@ export default function Post() {
 						<label>첨부파일</label>
 						<input
 							onChange={(e) => {
-								setImgUpload(e.target.files[0]);
+								setEditImgUpload(e.target.files[0]);
 							}}
 							type="file"
 							className="img"
 						/>
 					</div>
 					<div className="flex justify-end space-x-2">
-						<Link to="/club">
+						<Link to={`/club/${postId}`}>
 							<button className="rounded-md bg-red-400 text-white py-2 px-4">
 								취소
 							</button>
 						</Link>
-						<button className="rounded-md bg-blue-500 text-white py-2 px-4">
-							등록
+						<button
+							onClick={handleUpdate}
+							className="rounded-md bg-blue-500 text-white py-2 px-4"
+						>
+							수정
 						</button>
 					</div>
 				</form>

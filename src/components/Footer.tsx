@@ -8,7 +8,7 @@ export default function Footer() {
 					className="flex items-center justify-center font-bold text-neutral-800 dark:text-neutral-400"
 					to="/"
 				>
-					<img src="/public/logo2.png" className="h-13 w-9 mr-2" />
+					<img src="/logo2.png" className="h-13 w-9 mr-2" />
 					Mountaineer
 				</Link>
 			</div>

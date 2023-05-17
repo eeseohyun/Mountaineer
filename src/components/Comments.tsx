@@ -32,6 +32,7 @@ export default function Comments() {
 		};
 		fetchComments();
 	}, [postId]);
+	//댓글 달기 함수
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		const newComment = {
@@ -51,6 +52,8 @@ export default function Comments() {
 		setComments([...comments, { ...newComment, id: newCommentRef.id }]);
 		setCommentText("");
 	};
+
+	//댓글 삭제 함수
 	const handleDelete = async (id) => {
 		if (confirm("삭제하시겠습니까?") == true) {
 			const postRef = doc(db, "club", postId);
@@ -61,10 +64,11 @@ export default function Comments() {
 		} else {
 			return;
 		}
-
+		// 삭제된 댓글을 상태에 추가
 		setComments(comments.filter((comment) => comment.id !== id));
 	};
 
+	//댓글 수정 함수
 	const handleUpdate = async (id) => {
 		const postRef = doc(db, "club", postId);
 		const commentsRef = collection(postRef, "comments");
@@ -124,7 +128,7 @@ export default function Comments() {
 						<div className="flex items-center px-10">
 							<input
 								type="text"
-								value={comment.text}
+								value={editText}
 								onChange={(e) => setEditText(e.target.value)}
 								className="w-5/6 bg-gray-100 rounded-l-lg border border-gray-300 leading-normal resize-none py-1 px-3 font-sm placeholder-gray-400 focus:outline-none focus:bg-white"
 							/>
@@ -144,6 +148,8 @@ export default function Comments() {
 										setEditCommentId={setEditCommentId}
 										handleDelete={handleDelete}
 										commentId={comment.id}
+										commentText={comment.text}
+										setEditText={setEditText}
 									/>
 								</div>
 							)}

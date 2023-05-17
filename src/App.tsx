@@ -14,6 +14,7 @@ import MyClubs from "./pages/MyClubs";
 import Footer from "./components/Footer";
 import Search from "./pages/Search";
 import FreeBoard from "./pages/FreeBoard";
+import Edit from "./pages/Edit";
 import "./App.css";
 
 const App = () => {
@@ -32,6 +33,7 @@ const App = () => {
 				<Route path="/mypage/myposts" element={<MyPosts />} />
 				<Route path="/mypage/myclubs" element={<MyClubs />} />
 				<Route path="/board/freeboard" element={<FreeBoard />} />
+				<Route path="/club/:postId/edit" element={<Edit />} />
 			</Routes>
 			<Footer />
 		</div>
