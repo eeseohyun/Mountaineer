@@ -6,18 +6,14 @@
 
 ---
 
-등산을 사랑하는 이들이 모여 산악지식과 산행 경험을 공유하고, 함께 성장하고 소통하는 등산 커뮤니티 Mountaineer에서 등산을 더욱 풍요롭고 의미있게 즐겨보세요!
+등산을 사랑하는 이들이 모여 산악지식과 산행 경험을 공유하고, 함께 성장하고 소통하는 등산 커뮤니티 **Mountaineer**에서 등산을 더욱 풍요롭고 의미있게 즐겨보세요!
 단순 사진 업로드를 넘어, 여행 경로, 산행 일정, 등산 코스에 대한 자세한 기록을 남길 수 있습니다. 여러분의 등산 일지를 통해 다른 사용자들에게 산행에 대한 정보와 팁을 제공하며, 여러분도 다른 등산객들의 경험을 공유하고 소통할 수 있습니다. 또한 다양한 산악회나 등산 그룹에 참여하여 멤버들과 함께 산행 일정을 계획하고 소통할 수도 있습니다.
 
 ## 🗓️ Period
 
----
-
 - 23.4.24 ~ 5. 19 (약 4주)
 
 ## 🛠️ Installation
-
----
 
 1. Clone this Repo by running `git clone https://github.com/eeseohyun/mountaineer`
 2. `cd mountaineer`
@@ -25,8 +21,6 @@
 4. `npm run dev`
 
 ## ⭐️ Project Doc
-
----
 
 ### ⚡️ Built with
 
@@ -84,7 +78,7 @@
   |userNickname |string |유저 닉네임 |
   |userProfile |string |유저 프로필 |
   |timestamp |timestamp |댓글 작성날짜 |
-- 유저 정보
+- 유저 정보 <br/>
   `문서 ID = 유저ID로 설정`
   |필드명 |타입 |설명 |
   |------------|-------|-----|
@@ -94,14 +88,10 @@
 
 ## 📌 Information
 
----
-
 - [Pre 기획](https://rustic-meat-d76.notion.site/Pre-_-b324698b5bf2475182deb35863118c3c)
 - [프로젝트 주요 기능](https://rustic-meat-d76.notion.site/1e2b5f9121d4424fa09b5b7c2b502470)
 
 ## 추후 개선점
-
----
 
 - 게시판 추가 (자유 & 정보 게시판)
 - 댓글 알람
@@ -110,7 +100,5 @@
 - 산악 정보 서비스 API
 
 ## Author
-
----
 
 - [Seohyun Lee(이서현)]()
