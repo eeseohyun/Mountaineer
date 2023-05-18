@@ -20,12 +20,16 @@ export default function Comments() {
 	const [comments, setComments] = useState<Comment[]>([]);
 	const [commentText, setCommentText] = useState("");
 	const [editText, setEditText] = useState("");
-	const { currentUser } = useContext(AuthContext);
+	const authContext = useContext(AuthContext);
+	const currentUser = authContext?.currentUser;
 	const { postId } = useParams<{ postId: string }>();
 	const [editCommentId, setEditCommentId] = useState<string | null>(null);
 
 	useEffect(() => {
 		const fetchComments = async () => {
+			if (!postId) {
+				return;
+			}
 			const postRef = doc(db, "club", postId);
 			const commentsRef = collection(postRef, "comments");
 			const q = query(commentsRef, orderBy("timestamp", "asc"));
@@ -44,12 +48,15 @@ export default function Comments() {
 	//댓글 달기 함수
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
+		if (!postId) {
+			return;
+		}
 		const newComment: Comment = {
 			text: commentText,
 			postId,
-			userId: currentUser.uid,
-			userNickname: currentUser.displayName,
-			userProfile: currentUser.photoURL,
+			userId: currentUser?.uid,
+			userNickname: currentUser?.displayName,
+			userProfile: currentUser?.photoURL,
 			timestamp: Timestamp.fromDate(new Date()),
 		};
 
@@ -65,6 +72,9 @@ export default function Comments() {
 	//댓글 삭제 함수
 	const handleDelete = async (id: string) => {
 		if (window.confirm("삭제하시겠습니까?") == true) {
+			if (!postId) {
+				return;
+			}
 			const postRef = doc(db, "club", postId);
 			const commentsRef = collection(postRef, "comments");
 			await deleteDoc(doc(commentsRef, id)).then(() =>
@@ -79,6 +89,9 @@ export default function Comments() {
 
 	//댓글 수정 함수
 	const handleUpdate = async (id: string) => {
+		if (!postId) {
+			return;
+		}
 		const postRef = doc(db, "club", postId);
 		const commentsRef = collection(postRef, "comments");
 		const commentRef = doc(commentsRef, id);
@@ -151,7 +164,7 @@ export default function Comments() {
 					) : (
 						<div className="flex items-center px-10">
 							<p className="mr-5 ml-2 w-5/6">{comment.text}</p>
-							{currentUser.uid === comment.userId && (
+							{currentUser?.uid === comment.userId && (
 								<div className="flex w-1/6 justify-end">
 									<EditBtn
 										setEditCommentId={setEditCommentId}

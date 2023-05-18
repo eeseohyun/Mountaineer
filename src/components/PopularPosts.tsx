@@ -1,19 +1,22 @@
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../components/AuthContext";
+import { Timestamp } from "firebase/firestore";
+import Empty from "./Empty";
 
 interface PopularPostsProps {
-	popularPost: Post[];
+	popularPost?: Post[];
 }
 interface Post {
 	id: number;
 	img: string;
 	title: string;
-	createdDate: Date;
+	createdDate: Timestamp;
 }
 
 export default function PopularPosts({ popularPosts }: PopularPostsProps) {
-	const { currentUser } = useContext(AuthContext);
+	const authContext = useContext(AuthContext);
+	const currentUser = authContext?.currentUser;
 	return (
 		<section className="bg-white dark:bg-gray-900">
 			<div className="container px-5 py-9 mx-auto">
@@ -24,7 +27,7 @@ export default function PopularPosts({ popularPosts }: PopularPostsProps) {
 					</p>
 				</h1>
 				<div className="grid grid-cols-1 gap-8 mt-8 md:mt-16 md:grid-cols-2">
-					{popularPosts &&
+					{popularPosts.length !== 0 ? (
 						popularPosts.map((post) => (
 							<div key={post.id} className="lg:flex">
 								<img
@@ -44,7 +47,10 @@ export default function PopularPosts({ popularPosts }: PopularPostsProps) {
 									</span>
 								</div>
 							</div>
-						))}
+						))
+					) : (
+						<Empty />
+					)}
 				</div>
 			</div>
 		</section>

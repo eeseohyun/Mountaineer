@@ -7,9 +7,11 @@ import ProfileModal from "./ProfileModal";
 import { useNavigate } from "react-router-dom";
 
 export default function Nav() {
-	const { currentUser } = useContext(AuthContext);
+	const authContext = useContext(AuthContext);
+	const currentUser = authContext?.currentUser;
 	const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+	const [isLogged, setIsLogged] = useState(true);
 	const [searchInput, setSearchInput] = useState("");
 	const navigate = useNavigate();
 	const outSide = useRef();
@@ -19,12 +21,6 @@ export default function Nav() {
 		navigate(`/search?keyword=${searchInput}`);
 		setSearchInput("");
 		console.log(`Search submitted: ${searchInput}`);
-	};
-
-	const sidebarOutSideClick = (e: React.MouseEvent<HTMLElement>) => {
-		if (isSidebarOpen && outSide.current === e.target) {
-			setIsSidebarOpen(false);
-		}
 	};
 
 	return (
@@ -60,12 +56,15 @@ export default function Nav() {
 					{currentUser && currentUser.photoURL ? (
 						<button
 							className="text-white font-semibold focus:outline-none"
+							onMouseOver={() => {
+								setIsProfileModalOpen(true);
+							}}
 							onClick={() => {
 								setIsProfileModalOpen(true);
 							}}
 						>
 							<img
-								src={currentUser.photoURL}
+								src={currentUser?.photoURL}
 								alt="Profile Picture"
 								className="h-10 w-10 rounded-full mx-1"
 							/>
@@ -91,12 +90,7 @@ export default function Nav() {
 						<ProfileModal setIsProfileModalOpen={setIsProfileModalOpen} />
 					)}
 				</div>
-				{isSidebarOpen && (
-					<Sidebar
-						outSide={outSide}
-						sidebarOutSideClick={sidebarOutSideClick}
-					/>
-				)}
+				{isSidebarOpen && <Sidebar />}
 			</div>
 		</nav>
 	);

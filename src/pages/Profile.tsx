@@ -3,11 +3,18 @@ import { AuthContext } from "../components/AuthContext";
 import { updateProfile } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { addDoc, collection } from "firebase/firestore";
+import { doc, setDoc, collection } from "firebase/firestore";
 import { storage, db } from "../firebase.config";
 
+interface NewUserInfo {
+	displayName: string | undefined;
+	photoURL: string | undefined;
+	email: string | undefined;
+}
+
 export default function Profile() {
-	const { currentUser } = useContext(AuthContext);
+	const authContext = useContext(AuthContext);
+	const currentUser = authContext?.currentUser;
 	const [newNickname, setNewNickname] = useState<string>("");
 	const [newPhotoURL, setNewPhotoURL] = useState<string>("");
 	const [newPhotoFile, setNewPhotoFile] = useState<File | null>(null);
@@ -15,26 +22,25 @@ export default function Profile() {
 
 	const handleUpdate = async (e: FormEvent) => {
 		e.preventDefault();
-		const newUserInfo = {
-			displayName: newNickname || currentUser.displayName,
-			photoURL: currentUser.photoURL,
-			email: currentUser.email,
+		const newUserInfo: NewUserInfo = {
+			displayName: newNickname || currentUser?.displayName,
+			photoURL: currentUser?.photoURL,
+			email: currentUser?.email,
 		};
 		//유저 프로필 사진 storage에 저장하고 다운로드 url 가져오기
 		if (newPhotoFile) {
-			const photoRef = ref(storage, `users/${currentUser.uid}/profileImg.jpg`);
+			const photoRef = ref(storage, `users/${currentUser?.uid}/profileImg.jpg`);
 			await uploadBytes(photoRef, newPhotoFile);
 			const photoUrl = await getDownloadURL(photoRef);
 			newUserInfo.photoURL = photoUrl;
 		}
 		try {
+			const userRef = doc(collection(db, "users"), currentUser?.uid);
 			await updateProfile(currentUser, newUserInfo);
-			await addDoc(collection(db, "users"), {
-				...newUserInfo,
-			});
+			await setDoc(userRef, newUserInfo);
 			alert("수정이 완료되었습니다.");
-			navigate("/mypage");
-		} catch (error) {
+			navigate("/mypage/profile");
+		} catch (error: any) {
 			console.log(error.code);
 		}
 	};
@@ -60,12 +66,12 @@ export default function Profile() {
 											? currentUser.displayName
 											: "새로 변경할 닉네임"
 									}
-									value={currentUser.displayName}
+									value={newNickname}
 									onChange={(e) => {
 										if (e.target.value !== null) {
-											setNewNickname(currentUser.displayName);
-										} else {
 											setNewNickname(e.target.value);
+										} else {
+											setNewNickname(currentUser?.displayName || "");
 										}
 									}}
 								/>
@@ -77,7 +83,7 @@ export default function Profile() {
 								<input
 									className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
 									type="email"
-									value={currentUser.email}
+									value={currentUser?.email || ""}
 									readOnly
 								/>
 							</div>
@@ -87,7 +93,7 @@ export default function Profile() {
 								</label>
 								<input
 									type="file"
-									onChange={(e) => setNewPhotoFile(e.target.files[0])}
+									onChange={(e) => setNewPhotoFile(e.target.files?.[0] || null)}
 								/>
 							</div>
 							<div className="flex gap-1">

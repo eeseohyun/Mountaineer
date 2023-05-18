@@ -29,7 +29,9 @@ interface PostData {
 export default function Home() {
 	const [currentPosts, setCurrentPosts] = useState<PostData[]>([]);
 	const [popoularPosts, setPopularPosts] = useState<PostData[]>([]);
-	const { currentUser } = useContext(AuthContext);
+	const authContext = useContext(AuthContext);
+	const currentUser = authContext?.currentUser;
+
 	useEffect(() => {
 		const fetchCurrentPosts = async () => {
 			const board = collection(db, "club");
@@ -58,7 +60,6 @@ export default function Home() {
 						">=",
 						Math.floor("participantsNum" / 2)
 					),
-					orderBy("isParticipationed.length", "desc"),
 					limit(4)
 				)
 			);

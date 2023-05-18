@@ -12,7 +12,8 @@ interface Mountain {
 	schedule: string;
 }
 export default function MyClubs() {
-	const { currentUser } = useContext(AuthContext);
+	const authContext = useContext(AuthContext);
+	const currentUser = authContext?.currentUser;
 	const [userMountains, setUserMountains] = useState<Mountain[]>([]);
 	useEffect(() => {
 		if (currentUser) {
@@ -59,12 +60,11 @@ export default function MyClubs() {
 										/>
 									)}
 
-									<div className="flex flex-col justify-between py-5 lg:mx-6 ml-1">
-										<Link
-											to={`/club/${mountain.id}`}
-											className="text-xl font-semibold text-gray-800 hover:underline dark:text-white"
-										>
-											{mountain.title}
+									<div className="flex flex-col justify-end py-5 lg:mx-6 ml-1">
+										<Link to={`/club/${mountain.id}`}>
+											<span className="text-xl font-semibold text-gray-800 hover:underline dark:text-white">
+												{mountain.title}
+											</span>
 										</Link>
 										<span className="text-sm text-gray-500 dark:text-gray-300">
 											일정: {mountain.schedule}

@@ -37,11 +37,13 @@ export default function ClubPage(): JSX.Element {
 	const [participationBtn, setParticipationBtn] = useState<number>(0);
 	const [category, setCategory] = useState<string>("전체");
 	const [loading, setLoading] = useState<boolean>(true);
+	const [participationBtns, setParticipationBtns] = useState<string[]>([]);
 	//pagination
 	const [limit, setLimit] = useState<number>(5);
 	const [page, setPage] = useState<number>(1);
 	const offset: number = (page - 1) * limit;
-	const { currentUser } = useContext(AuthContext);
+	const authContext = useContext(AuthContext);
+	const currentUser = authContext?.currentUser;
 
 	const categories: Category[] = [
 		{ label: "전체", hoverColor: "gray-800" },
@@ -97,10 +99,31 @@ export default function ClubPage(): JSX.Element {
 				});
 			}
 		};
+
+		const fetchParticipationBtns = async () => {
+			const btns: string[] = [];
+			if (currentUser) {
+				for (const post of posts) {
+					if (
+						post.isParticipationed &&
+						post.isParticipationed.includes(currentUser.uid)
+					) {
+						btns.push(post.idx);
+					}
+				}
+			}
+			setParticipationBtns(btns);
+		};
 		fetchPost();
 		fetchImg();
+		fetchParticipationBtns();
 		setLoading(false);
-	}, [category, participationBtn, currentUser]);
+	}, [
+		category,
+		participationBtn,
+		currentUser,
+		posts.map((post) => post.isParticipationed).join(","),
+	]);
 
 	//참여하기 버튼 함수
 	const handleClick = async (idx: string) => {
@@ -116,7 +139,11 @@ export default function ClubPage(): JSX.Element {
 			await updateDoc(clubRef, {
 				isParticipationed: [...participants, currentUser.uid],
 			});
-			setParticipationBtn(participationBtn + 1);
+
+			const updatedBtns = [...participationBtns, idx];
+			setParticipationBtns(updatedBtns);
+
+			alert("참여하기 완료!");
 		}
 	};
 	console.log(posts);
@@ -195,44 +222,37 @@ export default function ClubPage(): JSX.Element {
 												: post.isParticipationed.length}
 											/{post.participantsNum}
 										</p>
-										{(post.isParticipationed &&
-											post.isParticipationed.length === post.participantsNum) ||
-										new Date(post.schedule) <= new Date() ? (
+										{participationBtns.includes(post.idx) ? (
 											<button
 												disabled
 												className="font-medium rounded-lg text-sm px-5 py-2.5 text-cente mt-1 text-white bg-neutral-400"
 											>
-												모집완료
+												참여완료
 											</button>
 										) : (
-											<div>
-												<button
-													onClick={() => handleClick(post.idx)}
-													disabled={participationBtn !== 0}
-													className="mt-1 text-white bg-emerald-500 hover:bg-emerald-600 focus:ring-4 focus:ring-emerald-500 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-emerald-600 dark:hover:bg-emerald-700 dark:focus:ring-emerald-800"
-												>
-													{post.isParticipationed &&
-													post.isParticipationed.includes(currentUser.uid)
-														? "참여완료"
-														: "참여하기"}
-												</button>
-											</div>
+											<button
+												onClick={() => handleClick(post.idx)}
+												disabled={participationBtns.includes(post.idx)}
+												className="mt-1 text-white bg-emerald-500 hover:bg-emerald-600 focus:ring-4 focus:ring-emerald-500 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-emerald-600 dark:hover:bg-emerald-700 dark:focus:ring-emerald-800"
+											>
+												참여하기
+											</button>
 										)}
 									</div>
 								</div>
 							</div>
 						</div>
 					))}
+					<div className="flex justify-center mt-3">
+						<Pagination
+							total={posts.length}
+							limit={limit}
+							page={page}
+							setPage={setPage}
+						/>
+					</div>
 				</>
 			)}
-			<div className="flex justify-center mt-3">
-				<Pagination
-					total={posts.length}
-					limit={limit}
-					page={page}
-					setPage={setPage}
-				/>
-			</div>
 		</div>
 	);
 }

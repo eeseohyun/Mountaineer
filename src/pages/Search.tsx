@@ -14,7 +14,8 @@ interface PostData {
 export default function Search() {
 	const [searchParams] = useSearchParams();
 	const [postResults, setPostResults] = useState<PostData[]>([]);
-	const { currentUser } = useContext(AuthContext);
+	const authContext = useContext(AuthContext);
+	const currentUser = authContext?.currentUser;
 	const searchParam = new URLSearchParams(searchParams);
 	const searchTerm = searchParam.get("keyword");
 	useEffect(() => {

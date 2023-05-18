@@ -12,6 +12,7 @@ export default function Login() {
 	const [loginEmail, setLoginEmail] = useState("");
 	const [loginPassword, setLoginPassword] = useState("");
 	const [errMsg, setErrMsg] = useState("");
+	const [isLogged, setIsLogged] = useState(false);
 	const navigate = useNavigate();
 	//login
 	const handleLogin = async (e: FormEvent) => {
@@ -19,7 +20,8 @@ export default function Login() {
 		try {
 			await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
 			navigate("/");
-		} catch (error) {
+			setIsLogged(true);
+		} catch (error: any) {
 			console.error(error.code);
 			switch (error.code) {
 				case "auth/wrong-password":

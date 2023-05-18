@@ -1,36 +1,32 @@
-import { useEffect, useState, createContext, ReactNode } from "react";
+import { useEffect, useState, createContext, ReactNode, FC } from "react";
 import { auth } from "../firebase.config";
 import { onAuthStateChanged, User } from "firebase/auth";
 
 interface AuthContextProps {
 	currentUser: User | null;
-	isLoggedIn: boolean;
 }
 export const AuthContext = createContext<AuthContextProps | null>(null);
 
 interface AuthProviderProps {
 	children: ReactNode;
 }
-export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
+export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 	const [currentUser, setCurrentUser] = useState<User | null>(null);
-	const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+
 	//로그인 상태 변경 감지
 	useEffect(() => {
-		onAuthStateChanged(auth, async (user) => {
+		const unsubscribe = onAuthStateChanged(auth, async (user) => {
 			console.log(user);
 			if (user) {
 				setCurrentUser(user);
-				setIsLoggedIn(true);
 			} else {
 				setCurrentUser(null);
-				setIsLoggedIn(false);
 			}
 		});
+		return unsubscribe();
 	}, []);
 
-	return (
-		<AuthContext.Provider value={{ currentUser, isLoggedIn }}>
-			{children}
-		</AuthContext.Provider>
-	);
+	const value: AuthContextProps = { currentUser };
+
+	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

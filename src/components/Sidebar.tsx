@@ -1,15 +1,10 @@
 import { Link } from "react-router-dom";
+import { RefObject } from "react";
 import { BsPeople } from "react-icons/bs";
 import { TbPhoto } from "react-icons/tb";
 import { ImInfo } from "react-icons/im";
 
-export default function Sidebar({
-	outSide,
-	sidebarOutSideClick,
-}: {
-	outSide: boolean;
-	sidebarOutSideClick: () => void;
-}) {
+export default function Sidebar() {
 	return (
 		<div className="absolute top-20 left-0 min-h-full flex flex-row">
 			<div className="flex flex-col w-56 bg-gray-800 rounded-r-3xl overflow-hidden">

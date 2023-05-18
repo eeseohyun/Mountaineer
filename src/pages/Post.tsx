@@ -29,7 +29,8 @@ interface PostData {
 	img?: string;
 }
 export default function Post() {
-	const { currentUser } = useContext(AuthContext);
+	const authContext = useContext(AuthContext);
+	const currentUser = authContext?.currentUser;
 	const [category, setCategory] = useState("전체");
 	const [title, setTitle] = useState("");
 	const [participantsNum, setParticipantsNum] = useState(0);
@@ -38,16 +39,16 @@ export default function Post() {
 	const [imgUpload, setImgUpload] = useState<File | null>(null);
 	const navigate = useNavigate();
 
-	const postData = {
+	const postData: PostData = {
 		createdDate: Timestamp.fromDate(new Date()),
 		title: title,
 		participantsNum: participantsNum,
 		schedule: schedule,
 		context: context,
 		category: category,
-		profileImg: currentUser.photoURL || "",
-		userNickname: currentUser.displayName || "",
-		userId: currentUser.uid || "",
+		profileImg: currentUser?.photoURL || "",
+		userNickname: currentUser?.displayName || "",
+		userId: currentUser?.uid || "",
 	};
 	const handlePost = async (e: FormEvent) => {
 		e.preventDefault();
@@ -56,7 +57,7 @@ export default function Post() {
 				// 이미지를 storage에 업로드
 				const imageRef = ref(
 					storage,
-					`${currentUser.uid}/${new Date().getTime()}`
+					`${currentUser?.uid}/${new Date().getTime()}`
 				);
 				await uploadBytes(imageRef, imgUpload);
 
@@ -143,7 +144,7 @@ export default function Post() {
 								setContext(e.target.value);
 							}}
 							required
-							rows="20"
+							rows={20}
 							className="context w-full text-gray-600 border-2 outline-none rounded-md p-2"
 							placeholder="산행코스, 산행시간, 출발시간 등 산행일정에 대한 자세한 내용을 입력해주세요."
 						></textarea>
@@ -152,7 +153,7 @@ export default function Post() {
 						<label>첨부파일</label>
 						<input
 							onChange={(e) => {
-								setImgUpload(e.target.files[0]);
+								setImgUpload(e.target.files?.[0] || null);
 							}}
 							type="file"
 							className="img"

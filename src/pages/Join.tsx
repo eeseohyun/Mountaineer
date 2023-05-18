@@ -12,7 +12,8 @@ export default function Join() {
 	const [password, setPassword] = useState("");
 	const [errorMsg, setErrorMsg] = useState("");
 	const [confirmedPassword, setConfirmedPassword] = useState("");
-	const { currentUser } = useContext(AuthContext);
+	const authContext = useContext(AuthContext);
+	const currentUser = authContext?.currentUser;
 	const navigate = useNavigate();
 
 	//닉네임 중복 검사
@@ -33,6 +34,10 @@ export default function Join() {
 		e.preventDefault();
 		if (password !== confirmedPassword) {
 			setErrorMsg("비밀번호가 일치하지 않습니다.");
+			return;
+		}
+		if (!/^(?=.*[a-zA-Z])((?=.*\d)|(?=.*\W)).{6,20}$/.test(password)) {
+			setErrorMsg("최소 1개의 숫자 혹은 특수 문자를 포함하여 6자리 이상.");
 			return;
 		}
 		const isNicknameDuplicated = await checkNicknameDuplicate(nickname);
@@ -56,7 +61,7 @@ export default function Join() {
 
 			alert("회원가입이 완료되었습니다.");
 			navigate("/login");
-		} catch (error) {
+		} catch (error: any) {
 			console.log(error);
 			switch (error.code) {
 				case "auth/weak-password":
@@ -122,15 +127,17 @@ export default function Join() {
 							</label>
 							<input
 								className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-								placeholder="비밀번호(영문, 숫자 포함 6자 이상)"
+								placeholder="비밀번호(영문, 숫자 혹은 특수기호 포함 6자 이상)"
 								type="password"
 								required
 								value={password}
 								onChange={(e) => setPassword(e.target.value)}
 							/>
-							{errorMsg === "비밀번호는 6자리 이상이어야 합니다." && (
-								<p className="text-red-500 text-xs">{errorMsg}</p>
-							)}
+							{errorMsg === "비밀번호는 6자리 이상이어야 합니다." ||
+								(errorMsg ===
+									"최소 1개의 숫자 혹은 특수 문자를 포함하여 6자리 이상." && (
+									<p className="text-red-500 text-xs">{errorMsg}</p>
+								))}
 						</div>
 						<div>
 							<label className="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-300">

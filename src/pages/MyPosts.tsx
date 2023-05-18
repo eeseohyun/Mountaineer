@@ -15,7 +15,8 @@ interface Post {
 	};
 }
 export default function MyPosts() {
-	const { currentUser } = useContext(AuthContext);
+	const authContext = useContext(AuthContext);
+	const currentUser = authContext?.currentUser;
 	const [userPosts, setUserPosts] = useState<Post[]>([]);
 
 	useEffect(() => {
@@ -27,7 +28,7 @@ export default function MyPosts() {
 					query(board, where("userId", "==", currentUser.uid))
 				);
 				const posts = querySnapshot.docs.map((doc) => {
-					const data = doc.data() as DocumentData;
+					const data = doc.data();
 					return { id: doc.id, ...doc.data() } as Post;
 				});
 				setUserPosts(posts);
@@ -50,7 +51,7 @@ export default function MyPosts() {
 										<img
 											className="object-cover w-full h-56 rounded-lg lg:w-64"
 											src={post.img}
-											alt=""
+											alt="postImg"
 										/>
 									) : (
 										<img
@@ -60,12 +61,11 @@ export default function MyPosts() {
 										/>
 									)}
 
-									<div className="flex flex-col justify-between py-5 lg:mx-6 ml-1">
-										<Link
-											to={`/club/${post.id}`}
-											className="text-xl font-semibold text-gray-800 hover:underline dark:text-white"
-										>
-											{post.title}
+									<div className="flex flex-col justify-end py-5 lg:mx-6 ml-1">
+										<Link to={`/club/${post.id}`}>
+											<span className="text-xl font-semibold text-gray-800 hover:underline dark:text-white">
+												{post.title}
+											</span>
 										</Link>
 										<span className="text-sm text-gray-500 dark:text-gray-300">
 											{post.createdDate.toDate().toLocaleString()}
