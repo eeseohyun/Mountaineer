@@ -3,7 +3,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { db, storage } from "../firebase.config";
 import { useState, useContext, useEffect, FormEvent } from "react";
 import { AuthContext } from "../components/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 const categories = [
@@ -38,6 +38,7 @@ export default function Post() {
 	const [context, setContext] = useState("");
 	const [imgUpload, setImgUpload] = useState<File | null>(null);
 	const navigate = useNavigate();
+	const { postId } = useParams<{ postId: string }>();
 
 	const postData: PostData = {
 		createdDate: Timestamp.fromDate(new Date()),
@@ -76,7 +77,7 @@ export default function Post() {
 					...postData,
 				});
 				alert("게시물을 업로드하였습니다!");
-				navigate("/club");
+				navigate(`/club/${postId}`);
 			}
 		} catch (error) {
 			console.log(error);

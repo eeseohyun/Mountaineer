@@ -46,7 +46,7 @@ export default function Detail() {
 	return (
 		<>
 			{detail !== null ? (
-				<div className="p-10 justify-center">
+				<div className="p-10 justify-center min-h-screen">
 					<div className="min-w-2/3 rounded overflow-hidden shadow-lg ">
 						{detail.img && (
 							<img className="w-full" src={detail.img} alt="Mountain" />
@@ -85,9 +85,7 @@ export default function Detail() {
 								<p className="text-gray-700 font-semibold">
 									🗓️ 일정 : {detail.schedule}
 								</p>
-								<p className="text-gray-700 text-base whitespace-pre-wrap">
-									{detail.context}
-								</p>
+								<div dangerouslySetInnerHTML={{ __html: detail.context }} />
 							</div>
 						</div>
 						<div className="px-6 pt-4 pb-3">

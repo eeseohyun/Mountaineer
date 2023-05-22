@@ -64,7 +64,7 @@ export default function DeleteAccount({ setIsProfileModalOpen }) {
 			await deleteDoc(userRef);
 			await deleteUser(currentUser);
 
-			alert("탈퇴 완료되었습니다.");
+			alert("탈퇴가 완료되었습니다.");
 			setIsProfileModalOpen(false);
 			navigate("/login");
 		} catch (error) {

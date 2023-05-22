@@ -26,7 +26,7 @@ export default function ProfileModal({
 	const currentUser = authContext?.currentUser;
 	const [userPosts, setUserPosts] = useState<Post[]>([]);
 	const [userMountains, setUserMountains] = useState<Mountain[]>([]);
-	const [isLogged, setIsLogged] = useState(true);
+
 	useEffect(() => {
 		if (currentUser) {
 			const fetchPosts = async () => {
@@ -151,10 +151,7 @@ export default function ProfileModal({
 				</div>
 				<div className="col-span-1 p-3 ">
 					<div className="flex flex-col items-center">
-						<Logout
-							setIsProfileModalOpen={setIsProfileModalOpen}
-							setIsLogged={setIsLogged}
-						/>
+						<Logout setIsProfileModalOpen={setIsProfileModalOpen} />
 					</div>
 				</div>
 			</div>

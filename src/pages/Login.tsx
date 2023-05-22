@@ -1,26 +1,29 @@
 import { auth, db } from "../firebase.config";
 import { doc, setDoc } from "firebase/firestore";
-import { FormEvent, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import {
 	signInWithEmailAndPassword,
 	GoogleAuthProvider,
 	signInWithPopup,
 } from "firebase/auth";
+import { AuthContext } from "../components/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
+	const authContext = useContext(AuthContext);
+	const setIsLogged = authContext?.setIsLogged;
 	const [loginEmail, setLoginEmail] = useState("");
 	const [loginPassword, setLoginPassword] = useState("");
 	const [errMsg, setErrMsg] = useState("");
-	const [isLogged, setIsLogged] = useState(false);
 	const navigate = useNavigate();
 	//login
 	const handleLogin = async (e: FormEvent) => {
 		e.preventDefault();
 		try {
 			await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
-			navigate("/");
 			setIsLogged(true);
+			navigate("/");
+			alert("환영합니다!");
 		} catch (error: any) {
 			console.error(error.code);
 			switch (error.code) {
@@ -47,7 +50,8 @@ export default function Login() {
 				setDoc(doc(db, "users", user.uid), {
 					displayName: user.displayName,
 					email: user.email,
-					photoURL: user.photoURL,
+					photoURL:
+						"https://img.freepik.com/premium-vector/mountain-illustration-design_617585-1673.jpg",
 				});
 				navigate("/");
 			})
@@ -78,6 +82,9 @@ export default function Login() {
 								required
 								onChange={(e) => setLoginEmail(e.target.value)}
 							/>
+							{errMsg === "존재하는 계정이 없습니다." && (
+								<p className="text-red-500 text-xs">{errMsg}</p>
+							)}
 						</div>
 
 						<div>

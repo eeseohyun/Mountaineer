@@ -1,14 +1,9 @@
 import Carousel from "react-material-ui-carousel";
 import { Link } from "react-router-dom";
-import { useContext } from "react";
-import { AuthContext } from "./AuthContext";
 
 interface CarouselsProps {}
 
 export default function Carousels(_: CarouselsProps) {
-	const authContext = useContext(AuthContext);
-	const currentUser = authContext?.currentUser;
-
 	const images: string[] = [
 		"https://media.istockphoto.com/id/1321121760/ko/%EB%B2%A1%ED%84%B0/%EB%82%A8%EC%9E%90-%EB%82%A8%EC%9E%90%EB%8A%94-%EC%97%AC%EC%9E%90%EC%97%90%EA%B2%8C-%EB%8F%84%EC%9B%80%EC%9D%98-%EC%86%90%EA%B8%B8%EC%9D%84-%ED%99%95%EC%9E%A5%ED%95%A9%EB%8B%88%EB%8B%A4-%EC%B6%94%EC%83%81-%ED%92%8D%EA%B2%BD-%EB%B2%A1%ED%84%B0-%EB%8B%A4%EA%B0%81%ED%98%95-%ED%92%8D%EA%B2%BD-%EC%9D%BC%EB%9F%AC%EC%8A%A4%ED%8A%B8%EB%A0%88%EC%9D%B4%EC%85%98-%EB%AF%B8%EB%8B%88%EB%A9%80-%ED%95%9C-%EC%8A%A4%ED%83%80%EC%9D%BC-%ED%94%8C%EB%9E%AB-%EB%94%94%EC%9E%90%EC%9D%B8-%EB%B0%9C%EA%B2%AC-%ED%83%90%EA%B5%AC%EC%9D%98-%EC%97%AC%ED%96%89-%EA%B0%9C%EB%85%90-%EC%96%B4%EB%93%9C%EB%B2%A4%EC%B2%98-%EA%B4%80%EA%B4%91.jpg?s=612x612&w=0&k=20&c=RRgxBfAIY3ZgLp3grXrn2-8KXV6ffVVDR-LURWUwpEQ=",
 		"https://mblogthumb-phinf.pstatic.net/MjAyMDAyMjZfMjQx/MDAxNTgyNjgyMDI0OTY0.AuDxAj5GgIF3N15q3jG2tlOsMezf-Bqry-x1bL67_mIg.LAK9kFBVYq4bB6318BtYtTRRTEvM4mMVT5YwljQVUscg.JPEG.artlife/2507651_image_1.jpg?type=w800",
@@ -33,19 +28,11 @@ export default function Carousels(_: CarouselsProps) {
 							배울 수 있습니다.
 						</p>
 						<div className="flex justify-center gap-2">
-							{currentUser ? (
-								<Link to="/club">
-									<button className="text-black bg-teal-400 p-3 rounded-lg hover:bg-teal-600 hover:text-white">
-										바로가기
-									</button>
-								</Link>
-							) : (
-								<Link to="/login">
-									<button className="text-black bg-teal-400 p-3 rounded-lg hover:bg-teal-600 hover:text-white">
-										산악 동호회
-									</button>
-								</Link>
-							)}
+							<Link to="/club">
+								<button className="text-black bg-teal-400 p-3 rounded-lg hover:bg-teal-600 hover:text-white">
+									바로가기
+								</button>
+							</Link>
 						</div>
 					</div>
 				</div>
@@ -67,19 +54,11 @@ export default function Carousels(_: CarouselsProps) {
 							산행 길을 떠나 산들의 아름다운 경관을 공유해보세요.
 						</p>
 						<div className="flex gap-2">
-							{currentUser ? (
-								<Link to="/freeboard">
-									<button className="text-black bg-teal-400 p-3 rounded-lg hover:bg-teal-600 hover:text-white">
-										바로가기
-									</button>
-								</Link>
-							) : (
-								<Link to="/login">
-									<button className="text-black bg-teal-400 p-3 rounded-lg hover:bg-teal-600 hover:text-white">
-										바로가기
-									</button>
-								</Link>
-							)}
+							<Link to="/freeboard">
+								<button className="text-black bg-teal-400 p-3 rounded-lg hover:bg-teal-600 hover:text-white">
+									바로가기
+								</button>
+							</Link>
 						</div>
 					</div>
 				</div>
@@ -101,19 +80,11 @@ export default function Carousels(_: CarouselsProps) {
 							즐거움을 느낄 수 있습니다.
 						</p>
 						<div className="flex gap-2">
-							{currentUser ? (
-								<Link to="/info">
-									<button className="text-black bg-teal-400 p-3 rounded-lg hover:bg-teal-600 hover:text-white">
-										바로가기
-									</button>
-								</Link>
-							) : (
-								<Link to="/login">
-									<button className="text-black bg-teal-400 p-3 rounded-lg hover:bg-teal-600 hover:text-white">
-										바로가기
-									</button>
-								</Link>
-							)}
+							<Link to="/info">
+								<button className="text-black bg-teal-400 p-3 rounded-lg hover:bg-teal-600 hover:text-white">
+									바로가기
+								</button>
+							</Link>
 						</div>
 					</div>
 				</div>

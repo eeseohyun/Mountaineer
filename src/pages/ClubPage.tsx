@@ -60,6 +60,7 @@ export default function ClubPage(): JSX.Element {
 			const board = collection(db, "club");
 			//일정이 빨리 끝나는 순으로 불러옴
 			let querySnapshot;
+
 			//지역별로 게시물 불러오기
 			if (category === "전체") {
 				querySnapshot = await getDocs(query(board, orderBy("schedule", "asc")));
@@ -161,7 +162,7 @@ export default function ClubPage(): JSX.Element {
 						</p>
 					))}
 				</div>
-				<Link to="/post">
+				<Link to={currentUser ? "/post" : "/login"}>
 					<button className="flex text-sm items-center p-2 w-1/10 border border-gray-400 text-gray-500 rounded-none outline-none hover:rounded-lg duration-200">
 						글쓰기
 						<BsPencilFill className="ml-1" />
@@ -222,12 +223,29 @@ export default function ClubPage(): JSX.Element {
 												: post.isParticipationed.length}
 											/{post.participantsNum}
 										</p>
-										{participationBtns.includes(post.idx) ? (
+
+										{post.isParticipationed &&
+										(post.isParticipationed.length === post.participantsNum ||
+											new Date(post.schedule) <= new Date()) ? (
 											<button
 												disabled
-												className="font-medium rounded-lg text-sm px-5 py-2.5 text-cente mt-1 text-white bg-neutral-400"
+												className="font-medium rounded-lg text-sm px-5 py-2.5 text-center mt-1 text-white bg-neutral-400"
+											>
+												모집완료
+											</button>
+										) : participationBtns.includes(post.idx) ? (
+											<button
+												disabled
+												className="font-medium rounded-lg text-sm px-5 py-2.5 text-center mt-1 text-white bg-neutral-400"
 											>
 												참여완료
+											</button>
+										) : new Date(post.schedule) <= new Date() ? (
+											<button
+												disabled
+												className="font-medium rounded-lg text-sm px-5 py-2.5 text-center mt-1 text-white bg-neutral-400"
+											>
+												모집마감
 											</button>
 										) : (
 											<button

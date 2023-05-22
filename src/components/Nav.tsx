@@ -1,4 +1,4 @@
-import { useContext, useState, useRef, FormEvent } from "react";
+import { useContext, useState, FormEvent } from "react";
 import { FaBars } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { AuthContext } from "./AuthContext";
@@ -11,10 +11,8 @@ export default function Nav() {
 	const currentUser = authContext?.currentUser;
 	const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-	const [isLogged, setIsLogged] = useState(true);
 	const [searchInput, setSearchInput] = useState("");
 	const navigate = useNavigate();
-	const outSide = useRef();
 
 	const handleSearchSubmit = (e: FormEvent) => {
 		e.preventDefault();
@@ -56,9 +54,6 @@ export default function Nav() {
 					{currentUser && currentUser.photoURL ? (
 						<button
 							className="text-white font-semibold focus:outline-none"
-							onMouseOver={() => {
-								setIsProfileModalOpen(true);
-							}}
 							onClick={() => {
 								setIsProfileModalOpen(true);
 							}}

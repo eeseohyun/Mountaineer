@@ -60,7 +60,7 @@ export default function Join() {
 			});
 
 			alert("회원가입이 완료되었습니다.");
-			navigate("/login");
+			navigate("/");
 		} catch (error: any) {
 			console.log(error);
 			switch (error.code) {
